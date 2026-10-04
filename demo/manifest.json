@@ -1,0 +1,18 @@
+{
+  "format_version": 1,
+  "description": "Historical live Omnigent recordings from October 3, 2026. No inference is performed when these files are imported.",
+  "runs": [
+    {
+      "id": "06f519544cd443a194a44965a1246164",
+      "case_id": "row_split",
+      "file": "runs/06f519544cd443a194a44965a1246164/run.json",
+      "sha256": "670b487993ec73aa82bef2e9c7bd720948dd659b888001efa998559dc63d63cf"
+    },
+    {
+      "id": "83faf266dc944354b43b5b8ffc22bbd6",
+      "case_id": "participant_holdout",
+      "file": "runs/83faf266dc944354b43b5b8ffc22bbd6/run.json",
+      "sha256": "b94648d9674fd972d64bec6857ce4825f60ce484a265eab95f62d8fb9d80a520"
+    }
+  ]
+}

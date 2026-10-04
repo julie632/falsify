@@ -1,0 +1,23 @@
+# Add one site to the existing host Caddy configuration after inspecting it.
+# Do not replace its global options or other sites. Requires Caddy 2.8 or newer.
+# Supply these values to the Caddy service environment, or replace the
+# placeholders in a private site file. Compose does not configure host Caddy.
+{$FALSIFY_DOMAIN} {
+    # No matcher: authentication covers the UI, every API, docs, and exports.
+    basic_auth {
+        {$FALSIFY_BASIC_AUTH_USER} {$FALSIFY_BASIC_AUTH_HASH}
+    }
+
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy same-origin
+        X-Frame-Options DENY
+    }
+    request_body {
+        max_size 64KB
+    }
+    reverse_proxy 127.0.0.1:18765 {
+        header_up -Authorization
+    }
+}

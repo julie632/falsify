@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f2">
+  <title>Falsify · The evidence comes first</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to experiment</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Lab navigation">
+      <a class="brand" href="/" aria-label="Falsify home"><span class="brand-symbol" aria-hidden="true">f.</span><span>falsify<span class="brand-period">.</span></span></a>
+      <div class="sidebar-kicker">An agentic science lab</div>
+      <nav class="navigation">
+        <a href="#experiment" class="nav-item active"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6m-5 0v7L4 20h16l-6-10V3M8 14h8"/></svg> Experiment <span class="nav-number">01</span></a>
+        <a href="#evidence" class="nav-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"/></svg> Evidence ledger</a>
+        <a href="#method" class="nav-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 10v6m0-9v1"/></svg> About the experiment</a>
+      </nav>
+      <div class="sidebar-note"><span class="small-label">Our research question</span><p>Does the evidence actually support the claim?</p><div class="note-line"></div><span>Make a claim.<br>Challenge it.<br>Let the result decide.</span></div>
+      <div class="sidebar-footer"><span class="tiny-dot"></span> Built for scientific discovery<span class="sidebar-version" id="app-version">Falsify POC</span></div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar"><div class="breadcrumb">Research workspace <span>/</span> <strong>Evaluation validity</strong></div><div class="connection" id="connection-status"><span class="connection-dot"></span><span id="connection-label">Connecting to lab</span></div></header>
+      <main id="main">
+        <section class="page-intro" id="experiment" aria-labelledby="page-title"><div><div class="eyebrow"><span class="eyebrow-line"></span> Experiment 001 <span class="eyebrow-divider">/</span> Machine learning reliability</div><h1 id="page-title">A good score.<br><em>A sound conclusion?</em></h1><p class="intro-copy">An AI lab that investigates a promising result, tests an alternative explanation, and follows the evidence.</p></div><div class="intro-mark" aria-hidden="true"><svg viewBox="0 0 130 130"><circle cx="65" cy="65" r="51"/><path d="M14 65h102M65 14v102M29 29l72 72M29 101l72-72"/><circle cx="65" cy="65" r="28"/><circle cx="65" cy="65" r="7"/></svg><span>CLAIM → TEST → REVISE</span></div></section>
+
+        <section class="demo-strip" id="demo-strip" aria-labelledby="demo-heading" hidden><div><h2 id="demo-heading">Explore the recorded evidence</h2><p>Completed examples. Opening a replay makes no new model calls.</p></div><div class="demo-actions"><button type="button" class="demo-button" id="demo-flawed" disabled><span>Flawed evaluation</span><small id="demo-flawed-mode">Checking saved runs</small><span class="demo-arrow" aria-hidden="true">↗</span></button><button type="button" class="demo-button" id="demo-control" disabled><span>Valid control</span><small id="demo-control-mode">Checking saved runs</small><span class="demo-arrow" aria-hidden="true">↗</span></button></div></section>
+
+        <div class="lab-grid">
+          <section class="card experiment-card" aria-labelledby="claim-heading">
+            <div class="card-heading"><span class="section-index">01</span><h2 id="claim-heading">The claim under review</h2><span class="tag">Human activity recognition</span></div>
+            <blockquote id="claim-text">This activity classifier generalizes to people it has never seen before.</blockquote>
+            <p class="claim-explainer">A strong test score is a starting point. Our lab checks whether the evaluation can support a claim about new people.</p>
+            <fieldset class="case-fieldset"><legend>Choose the evidence to investigate</legend><div class="case-options" id="case-options"><p class="loading-copy">Loading experiment cases…</p></div></fieldset>
+            <div class="run-controls"><div class="mode-field"><label for="run-mode">Mode for a new investigation</label><select id="run-mode"><option value="local">Deterministic local</option><option value="omnigent" disabled>Live Omnigent · checking setup</option></select></div><button class="primary-button" type="button" id="run-button" disabled><span id="run-button-text">Run new investigation</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button></div>
+            <p class="mode-explainer" id="mode-explainer">Local mode runs the scientific checks without paid AI inference.</p>
+            <div class="active-run-notice" id="active-run-notice" hidden><span>An investigation is running. Saved evidence is still available.</span><button type="button" class="text-button" id="view-active-run">View running investigation</button></div>
+            <div class="error-message" id="error-message" role="alert" hidden></div>
+          </section>
+
+          <section class="card protocol-card" aria-labelledby="protocol-heading"><div class="card-heading"><span class="section-index">02</span><h2 id="protocol-heading">The discovery loop</h2></div><div class="protocol-steps"><div class="protocol-step" data-role="planner"><span class="protocol-node">1</span><div><h3>Question the result</h3><p>The planner chooses a test that can distinguish competing explanations.</p></div></div><div class="protocol-step" data-role="operator"><span class="protocol-node">2</span><div><h3>Run the experiment</h3><p>The operator audits participant overlap and executes the chosen evaluation.</p></div></div><div class="protocol-step" data-role="reviewer"><span class="protocol-node">3</span><div><h3>Revise the conclusion</h3><p>The reviewer weighs the evidence and identifies the next useful experiment.</p></div></div></div><div class="protocol-footnote"><span class="tiny-dot"></span> The test must be able to change our mind.</div></section>
+        </div>
+
+        <section class="results-section" aria-labelledby="results-heading"><div class="section-heading"><div><span class="small-label">Measured, not imagined</span><h2 id="results-heading">What the experiment found</h2></div><span class="run-state" id="run-state" role="status" aria-live="polite">Awaiting an investigation</span></div>
+          <div class="result-context" id="result-context" hidden><span class="context-label" id="context-label"></span><span id="context-detail"></span><a href="#evidence" id="context-evidence-link">Follow the evidence ↓</a></div>
+          <div class="metrics-grid"><article class="metric-card"><span class="metric-label">Original evaluation</span><div class="metric-value" id="original-score">Pending</div><div class="metric-caption" id="original-caption">Accuracy · awaiting a real run</div><div class="metric-bar"><span id="original-bar"></span></div><div class="metric-secondary" id="original-secondary">Measured classification results will appear here.</div></article><article class="metric-card"><span class="metric-label" id="corrected-label">Participant-held-out evaluation</span><div class="metric-value" id="corrected-score">Pending</div><div class="metric-caption" id="corrected-caption">Accuracy · awaiting verification</div><div class="metric-bar verified"><span id="corrected-bar"></span></div><div class="metric-secondary" id="corrected-secondary">The follow-up is determined by evidence.</div></article><article class="metric-card overlap-card"><span class="metric-label">Participants in both original splits</span><div class="metric-value" id="overlap-score">Pending</div><div class="metric-caption" id="overlap-caption">Training and test overlap</div><div class="overlap-visual" aria-hidden="true"><span></span><span></span></div><div class="metric-secondary" id="overlap-secondary">A direct check of the new-person claim.</div></article></div>
+          <div class="verdict-card" id="verdict-card"><span class="verdict-icon" id="verdict-icon" aria-hidden="true">?</span><div><span class="small-label" id="verdict-label">Conclusion</span><h3 id="verdict-title">The evidence gets the final word.</h3><p id="verdict-summary">Run an investigation to see whether the claim is supported, needs revision, or requires more evidence.</p><p class="validation-warning" id="validation-warning" hidden></p><p id="repaired-claim" hidden></p><div class="verdict-evidence" id="verdict-evidence" hidden></div><p class="next-experiment" id="next-experiment" hidden></p></div></div>
+          <p class="comparison-note" id="comparison-note" hidden>The evaluations use different participant populations and sample counts. Their score difference does not isolate the causal effect of participant overlap.</p>
+          <div class="run-usage" id="run-usage" hidden><span id="usage-tools"></span><span id="usage-duration"></span><span id="usage-cost"></span></div>
+        </section>
+
+        <section class="card evidence-card" id="evidence" aria-labelledby="evidence-heading"><div class="ledger-header"><div class="card-heading"><span class="section-index">03</span><h2 id="evidence-heading">Evidence ledger</h2><span class="event-count" id="event-count">0 events</span></div><div class="ledger-actions"><span class="execution-badge" id="execution-badge">No run selected</span><a id="export-link" class="text-button disabled" aria-disabled="true">Export evidence <span aria-hidden="true">↗</span></a></div></div><div class="ledger-meta" id="ledger-meta" hidden></div><div class="ledger-toolbar" id="ledger-toolbar" hidden><p id="ledger-filter-note">Key decisions and computations. The complete record remains available.</p><button type="button" id="show-all-events" class="text-button" aria-pressed="false">Show all events</button></div><div class="timeline" id="timeline"><div class="empty-state"><span class="empty-symbol" aria-hidden="true">↳</span><div><h3>Every decision leaves a trace.</h3><p>Agent decisions, tool outputs, and review findings will appear here as the investigation runs.</p></div></div></div><div class="history-control"><label for="run-history">All investigations, including failures</label><select id="run-history"><option value="">No recorded investigations yet</option></select></div></section>
+
+        <section class="method-section" id="method" aria-labelledby="method-heading"><div><span class="small-label">A small experiment, a precise question</span><h2 id="method-heading">What this prototype can establish</h2><p>We compare an evaluation with shared participants against a control that holds participants apart. The lab checks the relationship between the stated claim, the data split, and the measured result.</p><p class="limitation-copy">Two cases demonstrate feasibility. They do not establish general agent reliability. A flawed evaluation does not prove that the classifier is bad; it means the claim needs appropriate evidence.</p></div><div class="source-card"><span class="small-label">Research material</span><a href="https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones" target="_blank" rel="noopener noreferrer">UCI Human Activity Recognition <span aria-hidden="true">↗</span></a><p>Smartphone activity measurements, grouped by participant. Dataset provenance and the exact evaluation settings accompany each result.</p><div id="dataset-status" class="dataset-status">Checking dataset availability</div></div></section>
+        <footer class="page-footer"><span class="footer-brand">falsify.</span><span>Scientific progress starts with a better question.</span><a href="#main">Back to experiment ↑</a></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

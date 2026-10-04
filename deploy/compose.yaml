@@ -1,0 +1,47 @@
+name: falsify
+
+services:
+  app:
+    image: ${FALSIFY_IMAGE:-falsify-lab:0.1.0}
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        CODEX_VERSION: ${FALSIFY_CODEX_VERSION:-0.158.0-alpha.2.1}
+    user: "10001:10001"
+    init: true
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      FALSIFY_DEDICATED_SERVER: "1"
+    ports:
+      # Only the existing host reverse proxy may expose this service.
+      - "127.0.0.1:${FALSIFY_HOST_PORT:-18765}:8765"
+    volumes:
+      - dataset:/app/data
+      - evidence:/app/artifacts
+      - auth_home:/home/falsify
+      - runtime:/var/lib/falsify/omnigent
+      - worker_cache:/app/.codex-tmp
+    tmpfs:
+      - /tmp:rw,nosuid,size=512m,mode=1777
+    cpus: ${FALSIFY_CPUS:-1.0}
+    mem_limit: ${FALSIFY_MEMORY_LIMIT:-1g}
+    pids_limit: 256
+    stop_grace_period: 45s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  dataset:
+  evidence:
+  auth_home:
+  runtime:
+  worker_cache:

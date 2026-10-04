@@ -1,0 +1,13 @@
+# Deny everything, then admit only the files consumed by Dockerfile.
+**
+!Dockerfile
+!pyproject.toml
+!uv.lock
+!falsify/
+!falsify/*.py
+!agents/
+!agents/falsify.yaml
+!static/
+!static/index.html
+!static/app.js
+!static/styles.css

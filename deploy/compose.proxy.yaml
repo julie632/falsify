@@ -1,0 +1,32 @@
+# Optional reverse proxy for a host with ports 80/443 available.
+# Inspect existing services before enabling it. Keep Caddyfile private.
+services:
+  proxy:
+    image: caddy:2-alpine@sha256:881bbc60f9986d5ab8e7cfd6cf7e4ef3c9c0439fef2429d035d065577882f028
+    restart: unless-stopped
+    network_mode: host
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - proxy_data:/data
+      - proxy_config:/config
+    tmpfs:
+      - /tmp:rw,nosuid,size=32m,mode=1777
+    cpus: 0.25
+    mem_limit: 128m
+    pids_limit: 64
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  proxy_data:
+  proxy_config:
