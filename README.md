@@ -1,12 +1,14 @@
 # Falsify
 
+[Judge demo, no login required](https://falsify.134-122-55-169.sslip.io) · [Two-minute video](https://falsify.134-122-55-169.sslip.io/demo.mp4) · [Captions](https://falsify.134-122-55-169.sslip.io/demo.srt) · [Public repository](https://github.com/julie632/falsify)
+
 A small scientific verification lab that asks whether an impressive machine-learning score supports the claim being made about it. Omnigent coordinates a planner, an experiment operator, and a separate reviewer agent. The tools execute real experiments on the public UCI Human Activity Recognition dataset.
 
 The six-hour scope is deliberately narrow: one dataset, a participant-overlap defect, a valid control, and an evidence-driven follow-up. This is a working feasibility demonstration, not a benchmark of general agent reliability.
 
-[Open the judge demo](https://falsify.134-122-55-169.sslip.io) · [Source repository](https://github.com/julie632/falsify) · [Submission evidence and requirements](docs/submission.md) · [Agent specifications](agents/falsify.yaml) · [Agent policies](docs/agent-policies.md)
+[Submission evidence and requirements](docs/submission.md) · [Agent specifications](agents/falsify.yaml) · [Agent policies](docs/agent-policies.md)
 
-The two-minute [video](https://falsify.134-122-55-169.sslip.io/demo.mp4) and [captions](https://falsify.134-122-55-169.sslip.io/demo.srt) are planned release destinations; upload and public access verification are pending. The hosted demo runs on DigitalOcean. Both fresh hosted AI cases completed on October 4, 2026. Scientific computation and recorded replays are also verified. Final anonymous website and repository access checks are pending release verification.
+The public judge demo opens without login and presents four reviewed recorded investigations with their exact evidence exports. Public writes are disabled. The repository is public, and the completed 120-second, 1080p video and captions are uploaded. Anonymous website access, evidence exports and video delivery were verified. Both fresh hosted AI cases completed on the DigitalOcean server on October 4, 2026; the public presentation replays these completed records.
 
 We use **open-source Omnigent**, not managed Databricks. Page 2 of the supplied official challenge brief explicitly permits either route and requires a Databricks account only for the managed route. Our actual Omnigent specialist sessions and computations are documented below.
 
@@ -81,7 +83,7 @@ The promising predictive result survives the better test. The original evaluatio
 
 ## Measured improvement
 
-A separate, preregistered deterministic comparison measured computation after the original valid-control evaluation already exists. In three paired repeats, auditing and retaining that result avoided one redundant classifier fit and one scientific call relative to an explicit audit-and-always-rerun comparator. The median paired difference was **13.9 seconds of local wall time**. Both paths retained the same narrow conclusion, and every rerun exactly matched the recorded control's metrics and predictions. See the [frozen protocol](demo/validation/compute-savings-protocol.json), [complete measurements](demo/validation/compute-savings.json), and [comparison code](scripts/measure_compute_savings.py).
+A separate, prespecified deterministic comparison measured computation after the original valid-control evaluation already exists. In three paired repeats, auditing and retaining that result avoided one redundant classifier fit and one scientific call relative to an explicit audit-and-always-rerun comparator. The median paired difference was **13.9 seconds of local wall time**. Both paths retained the same narrow conclusion, and every rerun exactly matched the recorded control's metrics and predictions. See the [frozen protocol](demo/validation/compute-savings-protocol.json), [complete measurements](demo/validation/compute-savings.json), and [comparison code](scripts/measure_compute_savings.py).
 
 This intentionally redundant comparator demonstrates a small compute saving. A fixed conditional rule can make the same saving. The measurement excludes original evaluation cost, inference, orchestration, startup and human effort; it establishes no end-to-end agent speedup, unique agent benefit or 10x claim. Repeated executions of the same case are not independent scientific replications.
 

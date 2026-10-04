@@ -1,0 +1,43 @@
+{
+  "url": "https://falsify.134-122-55-169.sslip.io",
+  "checks": [
+    "Judging routes open without authentication",
+    "Exactly four reviewed Omnigent replays and unchanged exports are public",
+    "Unreviewed records and private workspace paths are unavailable",
+    "New experiments and cancellation are blocked",
+    "Public status omits operator account and runtime details",
+    "Hosted HTML and JavaScript exactly match the tested source"
+  ],
+  "status": {
+    "public_demo": true,
+    "read_only": true,
+    "presentation_mode": "recorded_replay",
+    "recorded_evidence_available": true,
+    "capabilities": {
+      "view_replays": true,
+      "export_evidence": true,
+      "start_runs": false,
+      "cancel_runs": false
+    },
+    "version": "0.1.0"
+  },
+  "verified_at": "2026-10-04T12:51:38.455638+00:00",
+  "repository": {
+    "isPrivate": false,
+    "url": "https://github.com/julie632/falsify"
+  },
+  "media": [
+    {
+      "url": "https://falsify.134-122-55-169.sslip.io/demo.mp4",
+      "sha256": "978fa526282c457f056bfc3c8a4870fc05906441e2e3135e0b31610672e599c4",
+      "bytes": 4599179,
+      "anonymous_http_status": 200
+    },
+    {
+      "url": "https://falsify.134-122-55-169.sslip.io/demo.srt",
+      "sha256": "bbdec201b08a7547c8abcd6264845bf8ef82c67b4c6d49a942fa2cb56bef09c5",
+      "bytes": 2531,
+      "anonymous_http_status": 200
+    }
+  ]
+}

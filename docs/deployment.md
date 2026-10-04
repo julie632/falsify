@@ -4,7 +4,7 @@ These files package the current single-team prototype. The Linux/amd64 container
 
 ## Public judge access
 
-The judge-facing configuration is a no-login, read-only view of reviewed recorded evidence. It uses open-source Omnigent recordings, not a fresh agent run on each page visit. Deployment of this access change must pass the public checks below before it is described as live.
+The judge-facing configuration is a no-login, read-only view of reviewed recorded evidence. It uses open-source Omnigent recordings, not a fresh agent run on each page visit. Public access is now verified on the hosted HTTPS site: no authentication required, four reviewed replays available, exported JSON unchanged, private IDs rejected, and new-run/cancel requests blocked. The deployed public image ID begins `39507c48900d`.
 
 Set these values in the deployment environment:
 
@@ -27,7 +27,7 @@ uv run python -m scripts.check_demo --public --url https://falsify.134-122-55-16
 
 The check requires no-login HTTPS, `public_demo: true`, `read_only: true`, all four reviewed records and unchanged exports, blocked unknown IDs, and rejected start/cancel requests. The default local app and an authenticated operator deployment with `FALSIFY_PUBLIC_DEMO=0` retain the full workflow. To restore operator mode, restore full-site authentication before enabling mutations.
 
-Local verification for this change: 99 automated tests passed, including the public allowlist, fail-closed configuration, unchanged reviewed exports, rejected mutations, private-run preservation, and the default local workflow. A hosted rollout result must be recorded separately from these local checks.
+Local verification for this change: 99 automated tests passed, including the public allowlist, fail-closed configuration, unchanged reviewed exports, rejected mutations, private-run preservation, and the default local workflow. Hosted rollout checks also passed without credentials. The public demo video at `/demo.mp4` returns HTTP 200 and has a verified duration of exactly 120 seconds. The local public interface was visually checked: the no-login recorded-evidence banner was present, and the historical replay displayed 98.01% original and 96.17% corrected accuracy. The hosted page itself has not had a separate visual inspection.
 
 ## Earlier restricted deployment and live verification
 

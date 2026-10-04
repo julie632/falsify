@@ -1,6 +1,6 @@
 # Morning demo handover
 
-The judge-facing route is [Falsify on DigitalOcean](https://falsify.134-122-55-169.sslip.io/?run=df7fdb571ed140e7851c17517e13422e#results-heading). Public judge mode provides no-login exploration of reviewed recorded evidence and does not run new experiments. Verify the public rollout with the command below before sharing it. Private operator credentials remain in local `output/deployment/access.txt`, outside Git; judges should not need those credentials.
+The judge-facing route is [Falsify on DigitalOcean](https://falsify.134-122-55-169.sslip.io/?run=df7fdb571ed140e7851c17517e13422e#results-heading). Public judge mode provides no-login exploration of reviewed recorded evidence and does not run new experiments. The public rollout is verified: the site opens without authentication, exposes exactly four reviewed replays with unchanged exports, rejects private run IDs, and blocks experiment creation and cancellation. Private operator credentials remain in local `output/deployment/access.txt`, outside Git; judges should not need those credentials.
 
 The source repository is [julie632/falsify](https://github.com/julie632/falsify). It must remain private until Julie explicitly requests a visibility change. The overnight automation does not publish it in the morning.
 
@@ -57,7 +57,9 @@ The implementation uses `FALSIFY_PUBLIC_DEMO=1` and an explicit `FALSIFY_PUBLIC_
 
 ## Verification record
 
-- Public-mode source changes passed the full local suite of 99 tests. Hosted publication must pass the separate command above before being claimed complete.
+- Public-mode source changes passed the full local suite of 99 tests. Hosted no-login checks passed: four reviewed records, unchanged exports, private IDs returning 404, and blocked start/cancel requests. The public image ID begins `39507c48900d`.
+- The local public UI was visually checked: no-login recorded-evidence notice, hidden new-run controls, and the historical replay showing 98.01% original and 96.17% corrected accuracy. A separate hosted visual inspection has not been completed.
+- The [public two-minute demo video](https://falsify.134-122-55-169.sslip.io/demo.mp4) returns HTTP 200 and has a verified duration of exactly 120 seconds.
 
 - Earlier live-integration automated suite: 73 tests passed before the public-mode additions. Covered malformed audit evidence, evidence citations, disagreement retention, run concurrency, restart recovery, cleanup failures, thread draining, repeated cancellation, and slow server readiness within the total deadline.
 - Fresh local live regression: `e20e5568e66941918705c4373cb46a24`, completed in 175.4 seconds with three scientific calls and three specialist dispatches. Original evidence unsupported, correction executed with zero overlap, reviewer/reference agreement true. Reviewed unchanged record: [overnight-live.json](../demo/validation/overnight-live.json).
