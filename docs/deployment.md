@@ -4,11 +4,11 @@ These files package the current single-team prototype. The Linux/amd64 container
 
 ## Current deployment
 
-The app was updated overnight on October 4, 2026, with cancellation cleanup, stricter audit validation, and the rehearsed evidence interface. The preceding deployment is retained as `falsify-lab:pre-overnight` for rollback.
+The app was updated on October 4, 2026, with cancellation cleanup, stricter audit validation, the rehearsed evidence interface, and a verified fix for slow agent-runtime startup on the one-core droplet. The previous image is retained as `falsify-lab:pre-hosted-live`; the earlier `falsify-lab:pre-overnight` image also remains available.
 
 The app is hosted on the existing `claude` droplet at [falsify.134-122-55-169.sslip.io](https://falsify.134-122-55-169.sslip.io), behind authenticated HTTPS. The target is Ubuntu 24.04, amd64, with one CPU and 2 GiB RAM. Docker and Compose were installed from Ubuntu's package repositories. The existing Claude Remote Control service remains active. No droplet resize was performed.
 
-The deployed image is `sha256:07e791e8d9184b71d953117fc7540c0de28d43fa3277c099050c0a6cfc10c3b1`. It runs in `/opt/falsify` using the app Compose file and optional proxy overlay. The application port is limited to host loopback; the firewall permits SSH and web ports 80/443.
+The deployed image is `sha256:3901dadacfbaf9f37df1a8ca1c9dd418af8435dd91a6e4285b42d0abf6937d2e`. It runs in `/opt/falsify` using the app Compose file and optional proxy overlay. The application port is limited to host loopback; the firewall permits SSH and web ports 80/443.
 
 Verified on the actual droplet:
 
@@ -18,10 +18,14 @@ Verified on the actual droplet:
 - Fresh deterministic acceptance runs on the overnight image both passed: flawed case `e17a646b9bc841d8b005a406ff8d4cde` measured 98.0508% original accuracy, 21 shared participants, and completed a zero-overlap correction; clean control `89de0ed64b2e4eb690e492b68e9b50c1` measured 96.1656% accuracy and zero overlap without redundant correction.
 - Cancellation during actual CPU work preserved its finished measurement, blocked a concurrent run while draining, and produced no final scientific verdict.
 - Hosted HTML, JavaScript, and CSS match the source exercised in the browser rehearsal.
-- A normal app restart retained the dataset and both new complete run exports unchanged. No job remains active after the acceptance checks.
-- The app reports healthy, zero OOM events, and zero automatic restarts. Sampled idle working-set usage after the computation was approximately 375 MiB for the app and 23 MiB for the proxy.
+- A normal app restart retained the dataset, Codex authentication, and both new complete live exports unchanged. No job remains active after the acceptance checks.
+- The app reports healthy, zero OOM events, and zero automatic restarts. Live resource measurements and their capacity limits are recorded below.
 
-**Live AI operation on the droplet is still pending the account owner's separate Codex sign-in and subsequent integration check.** A device-code login was started for that purpose. Its temporary code expires; start a new flow if necessary. Private website login details are stored locally in `output/deployment/access.txt`, excluded from Git. They are separate from the Codex account login.
+**Fresh live AI operation passed both full cases after the account owner's separate server Codex sign-in.** Flawed case `df7fdb571ed140e7851c17517e13422e` completed in 308.6 seconds with three scientific calls and three specialist dispatches. It rejected the original evaluation with 21 overlapping participants and executed a zero-overlap correction. Clean control `ba03b3d5ebc646e79ae9c166025b9237` completed in 196.3 seconds with two scientific calls and two specialist dispatches, retaining the valid original evaluation without repair. Both have verified citations and reviewer/reference agreement; reviewed unchanged records are in [demo/validation](../demo/validation/README.md).
+
+The first hosted live attempt, `151b7c86147f4cf99bb6cf8e7dd189a2`, failed before inference at Omnigent's default 45-second readiness wait. The adapter now permits up to 180 seconds for readiness, capped by the run budget and still inside its total deadline. The image precompiles dependency bytecode to avoid repeated compilation in its read-only runtime. All 73 automated tests pass, including slow-readiness, deadline, and cancellation regressions.
+
+Private website login details remain in local `output/deployment/access.txt`, excluded from Git. They are separate from the Codex account login. No laptop authentication files were transferred.
 
 The app runs as UID 10001, with one Uvicorn worker. It listens on port 8765 inside its container and is published only to `127.0.0.1:18765` on the host. An HTTPS reverse proxy with authentication for the entire site is required before giving anyone a public link.
 
@@ -44,7 +48,7 @@ docker ps
 
 Inspect the existing proxy configuration and service before adding a site. Do not overwrite other applications, reuse an occupied port, open the app port publicly, or restart unrelated services. The included Caddy template works with a **host-installed Caddy** proxy or the optional Linux host-network proxy overlay described below. An ordinary bridge-network proxy container has a separate loopback interface; do not point that configuration at its own `127.0.0.1`.
 
-The default application memory limit is 1 GiB and the CPU limit is one core. Python's numerical libraries use one computation thread. The local Linux/amd64 deterministic validation reached approximately 340 MiB in sampled Docker working-set usage and 442.2 MiB in kernel peak charged memory, with no OOM events. These measurements exclude live agent inference. The inspected droplet has 2 GiB RAM and an existing service using about 1.1 GiB; preserve that service and measure live-run memory before treating the proposed limit as sufficient.
+The default application memory limit is 1 GiB and the CPU limit is one core. Python's numerical libraries use one computation thread. Hosted live verification sampled approximately 851 MiB of Docker working-set usage and 1,075,122,176 bytes of peak charged memory, approximately the 1 GiB limit. The kernel recorded memory reclaim pressure and swap use, including a sampled 615,329,792 bytes of application swap. Both sequential live cases completed with zero OOM events and zero automatic restarts. Agent subprocesses exited afterward and sampled idle working-set usage fell to about 304 MiB before the persistence restart. The droplet has 2 GiB RAM and shares it with the existing Claude service, which remained active. Capacity is tight; these two successful runs do not establish sustained-load reliability. Keep one active experiment and use recorded evidence for a short presentation.
 
 ## Package and build
 
@@ -143,7 +147,7 @@ The proxy's separate named volumes retain certificates and configuration state. 
 
 The `linux/amd64` image was built with locked Python dependencies and the exact Codex pin. The image starts as UID 10001, resolves its home to `/home/falsify`, contains no root-level source PDFs or copied Codex authentication, and reports sign-in required. Compose configuration and the example Caddy site passed validation with a throwaway test hash.
 
-Both deterministic cases completed inside the container with real computations. The flawed run had 21 shared participants and 98.0508% accuracy; its correction and the clean control had no participant overlap and 96.1656% accuracy. The Linux original result differs by one prediction from the earlier macOS result. Use each run's recorded metrics rather than presenting one machine's number as a universal constant. Live Linux sessions remain a separate validation step requiring the dedicated server login.
+Both deterministic cases completed inside the container with real computations. The flawed run had 21 shared participants and 98.0508% accuracy; its correction and the clean control had no participant overlap and 96.1656% accuracy. The Linux original result differs by one prediction from the earlier macOS result. Use each run's recorded metrics rather than presenting one machine's number as a universal constant. The subsequent actual hosted live sessions are recorded separately in the current deployment section above.
 
 ## Target-host acceptance checks
 

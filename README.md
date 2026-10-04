@@ -4,7 +4,7 @@ A small scientific verification lab that asks whether an impressive machine-lear
 
 The six-hour scope is deliberately narrow: one dataset, a participant-overlap defect, a valid control, and an evidence-driven follow-up. This is a working feasibility demonstration, not a benchmark of general agent reliability.
 
-The password-protected [hosted demo](https://falsify.134-122-55-169.sslip.io/?run=06f519544cd443a194a44965a1246164#results-heading) runs on the team's existing DigitalOcean droplet. Hosted scientific computation and recorded replays are verified. Fresh hosted AI investigations still require the separate server Codex sign-in and live integration check. See [deployment status and operations](docs/deployment.md). Website login details are kept outside Git in `output/deployment/access.txt` on the development computer.
+The password-protected [hosted demo](https://falsify.134-122-55-169.sslip.io/?run=df7fdb571ed140e7851c17517e13422e#results-heading) runs on the team's existing DigitalOcean droplet. Both fresh hosted AI cases completed on October 4, 2026, after the account owner completed the official device sign-in separately on the server. Hosted scientific computation and recorded replays are also verified. See [deployment status and operations](docs/deployment.md). Website login details are kept outside Git in `output/deployment/access.txt` on the development computer.
 
 ## Run the demo
 
@@ -35,16 +35,20 @@ A failed live run remains failed. It is never silently replaced by a determinist
 
 ## Verified runs
 
-Both cases completed with actual Omnigent specialist sessions on October 3, 2026:
+Both cases completed with actual Omnigent specialist sessions on the Linux droplet on October 4, 2026:
 
-| Case | Run ID | Observed behavior |
-| --- | --- | --- |
-| Flawed evaluation | `06f519544cd443a194a44965a1246164` | Three scientific calls and three specialist dispatches. Found overlap, requested and executed a held-out evaluation, rejected the original evidence while recognizing the repaired result. Completed in 164 seconds. |
-| Valid control | `83faf266dc944354b43b5b8ffc22bbd6` | Measured the official evaluation, verified zero overlap, and retained the narrow claim without a redundant correction. |
+| Case | Hosted run ID | Scientific calls / specialist dispatches | Elapsed |
+| --- | --- | ---: | ---: |
+| Flawed evaluation | `df7fdb571ed140e7851c17517e13422e` | 3 / 3 | 308.6 seconds |
+| Valid control | `ba03b3d5ebc646e79ae9c166025b9237` | 2 / 2 | 196.3 seconds |
 
-Open the [flawed-case replay](http://127.0.0.1:8765/?run=06f519544cd443a194a44965a1246164#results-heading) or [clean-control replay](http://127.0.0.1:8765/?run=83faf266dc944354b43b5b8ffc22bbd6#results-heading) while the server is running. The flawed live run's browser download was checked against the complete stored JSON. The automated suite covers missing-evidence rejection, real specialist completion checks, tool boundaries, disagreement retention, cancellation cleanup, and API validation. Automated tests use fixtures; the live records provide separate integration evidence. Current verification details are in the [morning handover](docs/morning-handover.md).
+The [hosted flawed-case evidence](demo/validation/hosted-live-row_split.json) records 98.0508% original accuracy and 21 shared participants. The reviewer requested a held-out evaluation, then rejected the original evidence while recognizing the repaired result: 96.1656% accuracy on nine unseen participants. The [hosted control evidence](demo/validation/hosted-live-participant_holdout.json) records the same held-out result, zero overlap, and acceptance within the tested scope without a redundant correction. Both conclusions agree with the fixed split rule.
 
-Earlier integration attempts exposed routing and timeout problems and remain visible as failed development records. The working setup uses the supported `gpt-6-luna` model, low reasoning effort, a longer startup wait, and a ten-minute deadline covering startup and inference, with cleanup allowed to drain accepted computation. Model service latency and remaining subscription allowance can still affect new runs.
+Earlier macOS runs `06f519544cd443a194a44965a1246164` and `83faf266dc944354b43b5b8ffc22bbd6`, recorded on October 3, remain unchanged in the [historical replay package](demo/README.md). Import that package to view its [flawed-case replay](http://127.0.0.1:8765/?run=06f519544cd443a194a44965a1246164#results-heading) and [clean-control replay](http://127.0.0.1:8765/?run=83faf266dc944354b43b5b8ffc22bbd6#results-heading) locally.
+
+The 73-test automated suite covers evidence validation, real specialist completion checks, tool boundaries, disagreement retention, cancellation cleanup, and API validation. Tests use fixtures; live records provide separate integration evidence. Current verification details are in the [morning handover](docs/morning-handover.md).
+
+The first hosted startup attempt failed before inference because the SDK's readiness check defaulted to 45 seconds. Dependency bytecode is now compiled during the container build, and readiness allows up to 180 seconds within the existing ten-minute run deadline. Failed attempts remain recorded. The working setup uses `gpt-6-luna` with low reasoning effort; model latency and subscription allowance can still affect new runs. Cleanup may drain accepted computation after the deadline.
 
 ## Scientific protocol
 
@@ -92,7 +96,7 @@ uv run python -m scripts.run_reference
 - `falsify/omnigent_adapter.py` and `agents/falsify.yaml`: actual Omnigent orchestration.
 - `falsify/server.py`: local API and run lifecycle.
 - `static/`: browser interface.
-- [Morning demo handover](docs/morning-handover.md): hosted access, the preferred rehearsal route, and remaining login action.
+- [Morning demo handover](docs/morning-handover.md): hosted access, the preferred rehearsal route, and current verification.
 - [Team handover](docs/team-handover.md): responsibilities, optional chat prompt, and demo narrative.
 - [Demo script](docs/pitch.md): 90-second pitch, judge questions, and rehearsal steps.
 - [Scientific notes](docs/science-notes.md): data and methodological details.

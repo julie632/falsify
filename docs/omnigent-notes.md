@@ -1,7 +1,7 @@
 # Omnigent integration
 
 Falsify uses the real `omnigent==0.16.0` runtime, local server, runner,
-Codex harness and declared specialist agents. The operator delegates to an
+Codex harness and declared specialist agents. The operator delegates to a
 separate planner and reviewer using Omnigent's `sys_session_send` mechanism.
 Real child session IDs, completed specialist events, requested computations,
 and final evidence are retained in the run ledger.
@@ -81,14 +81,48 @@ two scientific calls. The reviewer retained the narrowly scoped claim after
 `artifacts/runs/83faf266dc944354b43b5b8ffc22bbd6/run.json`.
 These are two controlled feasibility cases, not a reliability rate estimate.
 
+### Hosted Linux validation, October 4, 2026
+
+After the account owner completed the official device sign-in separately on
+the droplet, both cases completed with fresh model inference and local CPU
+computation on that server:
+
+| Case | Run | Elapsed | Scientific calls / specialist dispatches |
+| --- | --- | ---: | ---: |
+| Flawed evaluation | `df7fdb571ed140e7851c17517e13422e` | 308.6 seconds | 3 / 3 |
+| Clean control | `ba03b3d5ebc646e79ae9c166025b9237` | 196.3 seconds | 2 / 2 |
+
+The [flawed run](../demo/validation/hosted-live-row_split.json) recorded
+98.0508% original accuracy, 21 overlapping participants, and a reviewer-requested
+correction. The correction measured 96.1656% accuracy and macro F1
+0.9621130919578866 on nine unseen participants. The reviewer kept the original
+verdict unsupported and described the repaired evidence separately.
+
+The [clean control](../demo/validation/hosted-live-participant_holdout.json)
+recorded the same held-out metrics, zero overlap, and a supported scoped claim
+without a redundant correction. Both records contain completed planner and
+reviewer sessions, valid evidence citations, and agreement with the fixed split
+rule. The curated copies match the hosted exports exactly. Artifact hashes and
+confusion-matrix accuracy and F1 calculations were independently checked.
+The earlier macOS records remain unchanged; repeated use of the same dataset
+does not add independent scientific replications.
+
+The first hosted attempt, `151b7c86147f4cf99bb6cf8e7dd189a2`, failed before
+inference at the upstream readiness check's 45-second default. The container
+now precompiles dependency bytecode, and the adapter gives readiness up to
+180 seconds within the total run deadline. Four new regression cases cover
+slow startup and interruption during readiness, bringing the suite to 73
+passing tests. The failed attempt remains part of the development history.
+
 A separate harmless native-shell boundary probe through the same Omnigent
 Codex harness settings returned `{"native_shell_available":false}`. No shell
 execution was observed. This is a capability smoke check, not a security audit.
 
 Earlier failed startup and missing-tool attempts are retained as development
-history. Explicit client setup timeout of 120 seconds avoids the SDK's default
-30-second cold-start timeout. Full runs have a 600-second ceiling, with actual
-scientific tools and specialist delegation counts bounded separately.
+history. The HTTP client setup timeout is 120 seconds, separate from server
+readiness. A 600-second deadline covers queueing, startup, and inference, with
+cleanup allowed to drain accepted computation. Scientific tools and specialist
+delegation counts are bounded separately.
 
 Primary sources checked during implementation:
 

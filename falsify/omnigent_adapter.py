@@ -25,6 +25,7 @@ from pydantic import BaseModel, ConfigDict, Field
 PROJECT = Path(__file__).resolve().parents[1]
 AGENT_PATH = PROJECT / "agents" / "falsify.yaml"
 APP_CODEX = Path("/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex")
+SERVER_READY_TIMEOUT_SECONDS = 180.0
 _runtime_lock = asyncio.Lock()
 logger = logging.getLogger(__name__)
 
@@ -338,7 +339,13 @@ async def _run_discovery(context: dict, dispatch_tool: Callable,
             await _notify(emit_event, "operator", "runtime", "Starting Omnigent",
                           "Launching a local Omnigent server and Codex harness.", {})
             server = await _start_server_safely(_start_local_server, _stop_local_server, port)
-            await asyncio.to_thread(_wait_for_server, port, server)
+            # The pinned SDK defaults to 45 seconds here, independently of its
+            # HTTP client timeout. Cold server/runner imports can exceed that
+            # on a one-CPU container. The outer run deadline remains active.
+            await asyncio.to_thread(
+                _wait_for_server, port, server,
+                timeout=min(SERVER_READY_TIMEOUT_SECONDS, limits["timeout_seconds"]),
+            )
             base_url = f"http://127.0.0.1:{port}"
             headers = {**_server_headers(runner_id=server.runner_id),
                        "x-omnigent-background-session-titles": "off"}

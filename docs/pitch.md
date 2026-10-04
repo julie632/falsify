@@ -4,7 +4,7 @@ You are the evidence lead. You do not need to explain the code. Your job is to m
 
 ## Before choosing the demo
 
-The complete live Omnigent workflow has been verified in run `06f519544cd443a194a44965a1246164`. It completed real planner and reviewer delegations, executed all three scientific tools, and produced the original, audit, and corrected results below. It took 164 seconds on the development computer. The same scientific scores were also reproduced by the deterministic reference workflow, using the same dataset and settings.
+Both cases completed as fresh live Omnigent investigations on the hosted Linux server on October 4, 2026, after the account owner completed its separate official device sign-in. The flawed case took 308.6 seconds, with three scientific calls and three specialist dispatches. The clean control took 196.3 seconds, with two calls and two dispatches. Use recorded replays for the 90-second pitch.
 
 | What you are showing | Say this |
 | --- | --- |
@@ -17,9 +17,9 @@ Replay means reviewing a saved run. It is not a fresh experiment. The mode badge
 
 For the rehearsal, use **Explore the recorded evidence** near the top of the page. **Flawed evaluation** and **Valid control** open completed examples without starting model calls. Each button identifies whether its source is Omnigent or the fixed-rule reference. The chooser prefers a completed Omnigent example when the recorded protocol and split-rule checks pass. The full history, including failed development runs, remains below the ledger.
 
-The known live flawed-case record is `06f519544cd443a194a44965a1246164`, and the known live clean control is `83faf266dc944354b43b5b8ffc22bbd6`. The control checked zero overlap and retained the evaluation without another classifier run. Verify the selected record's numbers, verdict, and export. A fresh run can take several minutes. The script below describes recorded replays, which do not depend on fresh inference finishing during the pitch.
+Open the [hosted flawed-case replay](https://falsify.134-122-55-169.sslip.io/?run=df7fdb571ed140e7851c17517e13422e#results-heading) (`df7fdb571ed140e7851c17517e13422e`) and [hosted clean-control replay](https://falsify.134-122-55-169.sslip.io/?run=ba03b3d5ebc646e79ae9c166025b9237#results-heading) (`ba03b3d5ebc646e79ae9c166025b9237`). The control retained the evaluation without another classifier run. Verify the selected record's numbers, verdict, and export. The earlier macOS recordings, `06f519544cd443a194a44965a1246164` and `83faf266dc944354b43b5b8ffc22bbd6`, remain available unchanged as historical examples.
 
-The banner immediately above the scores says **Recorded replay** and identifies the original execution mode. The selector beside **Run new investigation** controls a future run; it does not change the source of the evidence already on screen. On the hosted site, replaying a saved investigation from the development computer does not prove fresh hosted AI inference works.
+The banner immediately above the scores says **Recorded replay** and identifies the original execution mode. The selector beside **Run new investigation** controls a future run; it does not change the source of the evidence already on screen. The two new records establish that hosted inference worked when they ran. Viewing them again is still a replay.
 
 You can open a replay while a fresh investigation continues in the background. The new-run button stays locked to prevent starting another one. **View running investigation** returns to its progress. This lets you present the recorded fallback while waiting for new evidence.
 
@@ -53,14 +53,16 @@ If a new live reviewer disagrees with the fixed split rule, show it as an observ
 
 ## Numbers you can defend
 
+These are the measured values from the two hosted live records:
+
 | Evaluation | Accuracy | Macro F1 | Shared participants |
 | --- | ---: | ---: | ---: |
-| Shuffled recordings | 98.01% | 98.15% | 21 |
+| Shuffled recordings | 98.05% | 98.20% | 21 |
 | Official participant holdout | 96.17% | 96.21% | 0 |
 
 Accuracy is the proportion of correct activity predictions. It is the large score on the screen. Macro F1 is a separate measure that gives each activity class equal weight and appears beneath the measured score. The script uses rounded accuracy. The valid control's second card explicitly retains the original result; it is not an independent rerun.
 
-These exact figures belong to the verified development-computer records. The Linux deterministic run produced 98.05% original accuracy, differing by one prediction, while its held-out result remained 96.17%. Read the numbers from the selected run and keep the spoken approximation “about 98 percent” rather than promising exact agreement across computers.
+The earlier macOS recordings measured 98.01% original accuracy and 98.15% macro F1. Hosted live and deterministic original accuracy was 98.05%, differing by one prediction; held-out accuracy remained 96.17%. Read the selected record's numbers and keep the spoken approximation “about 98 percent” rather than promising exact agreement across computers.
 
 The two evaluations have different sample counts and participant populations. The score difference does not isolate the causal effect of participant overlap. The corrected evaluation and the valid control use the same official split, so they are not independent replications.
 

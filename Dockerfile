@@ -33,7 +33,9 @@ RUN apt-get update \
 
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
-RUN uv sync --locked --no-dev --no-install-project \
+# Compile immutable dependency bytecode during the build to reduce startup CPU
+# on the shared one-core droplet, where the runtime cannot write .pyc files.
+RUN uv sync --locked --no-dev --no-install-project --compile-bytecode \
     && uv cache clean
 
 # Explicit copy list and .dockerignore prevent local credentials, PDFs, data,

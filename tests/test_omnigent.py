@@ -70,8 +70,9 @@ def runtime_stub(monkeypatch):
     import omnigent.chat
     import omnigent_client
 
-    state = SimpleNamespace(stopped=[], cancelled=False, script=None, create_hook=None)
-    server = SimpleNamespace(runner_id="test-runner")
+    state = SimpleNamespace(stopped=[], cancelled=False, script=None, create_hook=None,
+                            original_wait=omnigent.chat._wait_for_server)
+    server = SimpleNamespace(runner_id="test-runner", proc=SimpleNamespace(poll=lambda: None))
     monkeypatch.setattr(adapter, "_runtime_lock", asyncio.Lock())
     monkeypatch.setattr(adapter, "readiness", lambda: {
         "available": True, "codex_path": "/test/codex", "version": "0.16.0"})
@@ -153,6 +154,81 @@ def test_cold_start_obeys_deadline_and_restores_environment(runtime_stub, monkey
         assert time.monotonic() - start < 0.5
         assert len(runtime_stub.stopped) == 1
         assert os.environ["FALSIFY_BRIDGE_URL"] == "previous-value"
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("run_timeout,expected_timeout,reaches_sdk", [
+    (600, 180, True),
+    (30, 30, False),
+])
+def test_server_readiness_allows_slow_cold_start_within_run_budget(
+        runtime_stub, monkeypatch, run_timeout, expected_timeout, reaches_sdk):
+    """Exercise Omnigent's real polling loop with a 75-second simulated boot."""
+    import omnigent.chat
+
+    clock = SimpleNamespace(elapsed=0.0)
+    recorded_timeouts = []
+    def sleep(seconds):
+        clock.elapsed += seconds
+    def get_status(*args, **kwargs):
+        return SimpleNamespace(status_code=200 if clock.elapsed >= 75 else 503,
+                               json=lambda: {"online": True})
+    def startup_failure(server):
+        raise RuntimeError("server readiness deadline reached")
+    def wait_for_server(port, server, timeout=45.0):
+        recorded_timeouts.append(timeout)
+        runtime_stub.original_wait(port, server, timeout=timeout)
+    async def sdk_reached():
+        raise RuntimeError("SDK setup reached")
+
+    # Replace this module's clock, not Python's shared time module or the
+    # event loop clock. This performs no wall-clock waiting or network I/O.
+    monkeypatch.setattr(omnigent.chat, "time", SimpleNamespace(
+        monotonic=lambda: clock.elapsed, sleep=sleep))
+    monkeypatch.setattr(omnigent.chat, "_server_get", get_status)
+    monkeypatch.setattr(omnigent.chat, "_raise_server_failed", startup_failure)
+    monkeypatch.setattr(omnigent.chat, "_wait_for_server", wait_for_server)
+    runtime_stub.create_hook = sdk_reached
+    expected_error = "SDK setup reached" if reaches_sdk else "server readiness deadline reached"
+    with pytest.raises(RuntimeError, match=expected_error):
+        asyncio.run(adapter.run_discovery({"case_id": "C-01"}, lambda *args: {},
+                                          budget={"timeout_seconds": run_timeout}))
+    assert recorded_timeouts == [expected_timeout]
+    assert (clock.elapsed >= 75) is reaches_sdk
+    assert len(runtime_stub.stopped) == 1
+
+
+@pytest.mark.parametrize("interrupt", ["deadline", "cancel"])
+def test_active_readiness_poll_obeys_outer_deadline_and_cancellation(
+        runtime_stub, monkeypatch, interrupt):
+    import omnigent.chat
+    import threading
+    import time
+
+    entered = threading.Event()
+    stopped = threading.Event()
+    def wait_for_server(*args, **kwargs):
+        entered.set()
+        assert stopped.wait(timeout=1)
+    def stop_server(server):
+        runtime_stub.stopped.append(server)
+        stopped.set()
+    monkeypatch.setattr(omnigent.chat, "_wait_for_server", wait_for_server)
+    monkeypatch.setattr(omnigent.chat, "_stop_local_server", stop_server)
+    async def run():
+        started = time.monotonic()
+        task = asyncio.create_task(adapter.run_discovery(
+            {"case_id": "C-01"}, lambda *args: {},
+            budget={"timeout_seconds": 0.03 if interrupt == "deadline" else 30}))
+        assert await asyncio.to_thread(entered.wait, 1)
+        if interrupt == "cancel":
+            task.cancel()
+        expected = asyncio.CancelledError if interrupt == "cancel" else TimeoutError
+        with pytest.raises(expected):
+            await asyncio.wait_for(task, timeout=1)
+        assert time.monotonic() - started < 0.5
+        assert stopped.is_set()
+        assert len(runtime_stub.stopped) == 1
     asyncio.run(run())
 
 
