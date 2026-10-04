@@ -4,16 +4,21 @@ These files package the current single-team prototype. The Linux/amd64 container
 
 ## Current deployment
 
+The app was updated overnight on October 4, 2026, with cancellation cleanup, stricter audit validation, and the rehearsed evidence interface. The preceding deployment is retained as `falsify-lab:pre-overnight` for rollback.
+
 The app is hosted on the existing `claude` droplet at [falsify.134-122-55-169.sslip.io](https://falsify.134-122-55-169.sslip.io), behind authenticated HTTPS. The target is Ubuntu 24.04, amd64, with one CPU and 2 GiB RAM. Docker and Compose were installed from Ubuntu's package repositories. The existing Claude Remote Control service remains active. No droplet resize was performed.
 
-The deployed image is `sha256:985825b0429bb6a7fb141cca8c2aa83fcb2b7303182a887f59513d27c185dea2`. It runs in `/opt/falsify` using the app Compose file and optional proxy overlay. The application port is limited to host loopback; the firewall permits SSH and web ports 80/443.
+The deployed image is `sha256:07e791e8d9184b71d953117fc7540c0de28d43fa3277c099050c0a6cfc10c3b1`. It runs in `/opt/falsify` using the app Compose file and optional proxy overlay. The application port is limited to host loopback; the firewall permits SSH and web ports 80/443.
 
 Verified on the actual droplet:
 
 - HTTPS certificate validation and HTTP-to-HTTPS redirection succeed.
 - Missing or incorrect demo credentials are rejected, including an unauthenticated attempt to start a live run.
 - The two deliberately selected, reviewed replay exports match the laptop's verified source records exactly. These are historical runs, not fresh Linux agent runs.
-- A new deterministic control, `3ff99cdcba914c76b17755cec17bcb98`, completed with zero participant overlap and 96.1656% accuracy.
+- Fresh deterministic acceptance runs on the overnight image both passed: flawed case `e17a646b9bc841d8b005a406ff8d4cde` measured 98.0508% original accuracy, 21 shared participants, and completed a zero-overlap correction; clean control `89de0ed64b2e4eb690e492b68e9b50c1` measured 96.1656% accuracy and zero overlap without redundant correction.
+- Cancellation during actual CPU work preserved its finished measurement, blocked a concurrent run while draining, and produced no final scientific verdict.
+- Hosted HTML, JavaScript, and CSS match the source exercised in the browser rehearsal.
+- A normal app restart retained the dataset and both new complete run exports unchanged. No job remains active after the acceptance checks.
 - The app reports healthy, zero OOM events, and zero automatic restarts. Sampled idle working-set usage after the computation was approximately 375 MiB for the app and 23 MiB for the proxy.
 
 **Live AI operation on the droplet is still pending the account owner's separate Codex sign-in and subsequent integration check.** A device-code login was started for that purpose. Its temporary code expires; start a new flow if necessary. Private website login details are stored locally in `output/deployment/access.txt`, excluded from Git. They are separate from the Codex account login.

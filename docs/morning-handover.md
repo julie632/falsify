@@ -47,7 +47,7 @@ uv run python -m scripts.import_demo
 
 Deployment operations and the separate server login commands are in [deployment.md](deployment.md). Preserve the existing `claude-remote` service and Docker data volumes. The dataset and evidence persist across normal app restarts.
 
-Overnight follow-ups are scheduled every 30 minutes until 08:00 America/New_York on October 4, 2026. This computer and the Codex app must remain available for those local follow-ups. The DigitalOcean site runs independently.
+Overnight follow-ups are scheduled every 30 minutes until 08:00 America/New_York on October 4, 2026. This computer and the Codex app must remain available for those local follow-ups. The DigitalOcean site runs independently. A temporary AC-powered keep-awake assertion is set to expire at the same morning deadline; closing the laptop lid or disconnecting power can still prevent local follow-ups.
 
 ## Verification record
 
@@ -55,4 +55,13 @@ Overnight follow-ups are scheduled every 30 minutes until 08:00 America/New_York
 - Fresh local live regression: `e20e5568e66941918705c4373cb46a24`, completed in 175.4 seconds with three scientific calls and three specialist dispatches. Original evidence unsupported, correction executed with zero overlap, reviewer/reference agreement true. Reviewed unchanged record: [overnight-live.json](../demo/validation/overnight-live.json).
 - Local live measurements: 98.0054% original accuracy, 96.1656% corrected accuracy, with 21 and zero shared participants respectively.
 - Both historical hosted replay exports match the reviewed source records. Unauthenticated website, API, and documentation requests return 401.
-- Final image deployment and browser rehearsal are being completed; their results will be added here.
+- Final browser rehearsal passed: replay selection, source labels, score cards, exact evidence-link expansion, all-event toggle, original-preserving clean control, complete JSON download, and viewing replay while a fresh run continues. The new-run button unlocks when the background run finishes. No browser console errors were observed.
+- Fresh browser-started local control: `f5e714b3b4e14ece8d462b8d48251583`, completed with a supported scoped conclusion and no redundant correction.
+- Updated Linux/amd64 image: `sha256:07e791e8d9184b71d953117fc7540c0de28d43fa3277c099050c0a6cfc10c3b1`. Its hosted HTML, JavaScript, and CSS match the rehearsed source exactly.
+- Hosted cancellation during real CPU computation passed. It retained the finished original measurement, rejected a concurrent start while draining, and recorded cancellation without a scientific verdict.
+- Fresh hosted flawed case: `e17a646b9bc841d8b005a406ff8d4cde`, completed with three scientific calls, 98.0508% original accuracy, 21 overlapping participants, a zero-overlap correction, and rejection of the original evidence.
+- Fresh hosted clean control: `89de0ed64b2e4eb690e492b68e9b50c1`, completed with two scientific calls, 96.1656% accuracy, zero overlap, and the original evaluation retained without repair.
+- Restart-persistence check passed: the dataset and both new complete scientific exports survived unchanged. The app is healthy, runs as UID 10001, has zero OOM events and zero automatic restarts, and has no active job. The existing `claude-remote` service is active.
+- Private GitHub backup is pushed. Original PDFs, resume, website credentials, model authentication, raw data, caches, and unreviewed run history remain excluded.
+
+Final verification completed: 2026-10-04 03:42 UTC. The only unresolved deployment capability is fresh server-side AI inference, which still requires the account owner’s Codex login and subsequent Linux integration test.
