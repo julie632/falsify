@@ -15,3 +15,4 @@ output/
 .codex-tmp/
 *.log
 deploy/Caddyfile
+video/production.json

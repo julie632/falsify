@@ -1,19 +1,19 @@
 # Morning demo handover
 
-The demo runs at [Falsify on DigitalOcean](https://falsify.134-122-55-169.sslip.io/?run=06f519544cd443a194a44965a1246164#results-heading). Website login details are in the private local file `output/deployment/access.txt`. Keep that file outside Git.
+The judge-facing route is [Falsify on DigitalOcean](https://falsify.134-122-55-169.sslip.io/?run=df7fdb571ed140e7851c17517e13422e#results-heading). Public judge mode provides no-login exploration of reviewed recorded evidence and does not run new experiments. Verify the public rollout with the command below before sharing it. Private operator credentials remain in local `output/deployment/access.txt`, outside Git; judges should not need those credentials.
 
 The source repository is [julie632/falsify](https://github.com/julie632/falsify). It must remain private until Julie explicitly requests a visibility change. The overnight automation does not publish it in the morning.
 
 ## Rehearse this route first
 
-1. Open the hosted demo and sign in with the website credentials.
+1. Open the hosted public demo. Confirm the banner says **Public demo · No login needed** and identifies the evidence as recorded. New-run controls should be absent.
 2. Select **Flawed evaluation** in the completed examples. Explain that this is a recorded result from a real Omnigent investigation, not a new agent run.
 3. Show the original score, the 21 overlapping participants, and the corrected evaluation with zero overlap. Click a cited evidence ID and inspect its recorded data.
 4. Open the **Valid control** example. Its original split passes, so the agents retain it without a redundant repair.
 5. Download the evidence JSON to show that measurements, decisions, citations, and provenance are inspectable.
-6. If judges want a fresh AI investigation, select **Live Omnigent**, choose a case, and run it. Both cases passed on the droplet after the separate server sign-in. Allow several minutes: the measured hosted runs took about five minutes for the flawed case and three minutes for the control. **Deterministic local** remains available for real scientific computation without model inference.
+6. Explain that both fresh hosted live cases already passed before these recordings were published for viewing. Public access cannot start or cancel experiments or consume the owner's model allowance. Fresh live or deterministic demonstrations require the local app or a separately protected operator environment, with several minutes available.
 
-Use the [90-second pitch](pitch.md). The crucial point: an impressive score can come from an evaluation that does not test its claim. Finding that mismatch does not prove the predictive claim false. The corrected result remains promising, within this benchmark's scope.
+Use the [90-second rehearsal pitch](pitch.md) or the prepared two-minute video plan in `video/demo-plan.json`. The crucial point: an impressive score can come from an evaluation that does not test its claim. Finding that mismatch does not prove the predictive claim false. The corrected result remains promising, within this benchmark's scope.
 
 ## Fresh hosted AI runs are verified
 
@@ -31,10 +31,10 @@ Open <http://127.0.0.1:8765>. New live runs consume account allowance and may ta
 
 ## Recovery and checks
 
-Read-only hosted checks, without exposing the password:
+Public no-login checks, which also verify reviewed-only history and blocked mutations:
 
 ```sh
-uv run python -m scripts.check_demo --access-file output/deployment/access.json
+uv run python -m scripts.check_demo --public --url https://falsify.134-122-55-169.sslip.io
 ```
 
 If the hosted site is unavailable, use the local app. On a new checkout, import the deliberately reviewed historical records before starting:
@@ -49,12 +49,20 @@ Deployment operations and the separate server login commands are in [deployment.
 
 Overnight follow-ups are scheduled every 30 minutes until 08:00 America/New_York on October 4, 2026. This computer and the Codex app must remain available for those local follow-ups. The DigitalOcean site runs independently. A temporary AC-powered keep-awake assertion is set to expire at the same morning deadline; closing the laptop lid or disconnecting power can still prevent local follow-ups.
 
+## Public history scope
+
+Public mode exposes only four explicitly reviewed actual Omnigent records: the hosted pair `df7fdb571ed140e7851c17517e13422e` and `ba03b3d5ebc646e79ae9c166025b9237`, plus the earlier development pair `06f519544cd443a194a44965a1246164` and `83faf266dc944354b43b5b8ffc22bbd6`. The example chooser prefers the newer hosted pair. All other stored investigations, including development failures, remain private and return `404` to public visitors. Their records are preserved, not deleted.
+
+The implementation uses `FALSIFY_PUBLIC_DEMO=1` and an explicit `FALSIFY_PUBLIC_RUN_IDS` allowlist. Missing or malformed configuration exposes nothing. The reviewed exports preserve the original events, scores, timestamps, and conclusions unchanged. Viewing them does not perform new inference. Public read-only enforcement is independent of whether the owner remains signed in on the server.
+
 ## Verification record
 
-- Automated suite: 73 tests pass. Covered malformed audit evidence, evidence citations, disagreement retention, run concurrency, restart recovery, cleanup failures, thread draining, repeated cancellation, and slow server readiness within the total deadline.
+- Public-mode source changes passed the full local suite of 99 tests. Hosted publication must pass the separate command above before being claimed complete.
+
+- Earlier live-integration automated suite: 73 tests passed before the public-mode additions. Covered malformed audit evidence, evidence citations, disagreement retention, run concurrency, restart recovery, cleanup failures, thread draining, repeated cancellation, and slow server readiness within the total deadline.
 - Fresh local live regression: `e20e5568e66941918705c4373cb46a24`, completed in 175.4 seconds with three scientific calls and three specialist dispatches. Original evidence unsupported, correction executed with zero overlap, reviewer/reference agreement true. Reviewed unchanged record: [overnight-live.json](../demo/validation/overnight-live.json).
 - Local live measurements: 98.0054% original accuracy, 96.1656% corrected accuracy, with 21 and zero shared participants respectively.
-- Both historical hosted replay exports match the reviewed source records. Unauthenticated website, API, and documentation requests return 401.
+- Before public judge mode, both historical hosted replay exports matched the reviewed source records, and unauthenticated website, API, and documentation requests returned 401. Public judge mode intentionally replaces that login requirement with reviewed-only access and blocked mutations.
 - Earlier browser rehearsal passed: replay selection, source labels, score cards, exact evidence-link expansion, all-event toggle, original-preserving clean control, complete JSON download, and viewing replay while a fresh run continues. The new-run button unlocks when the background run finishes. No browser console errors were observed. After the hosted live checks, the app's browser safety policy rejected reopening the hosted URL, so a new visual rehearsal was not completed. Current hosted API, export, and frontend-byte checks passed.
 - Fresh browser-started local control: `f5e714b3b4e14ece8d462b8d48251583`, completed with a supported scoped conclusion and no redundant correction.
 - Updated Linux/amd64 image: `sha256:3901dadacfbaf9f37df1a8ca1c9dd418af8435dd91a6e4285b42d0abf6937d2e`. Its hosted HTML, JavaScript, and CSS match the rehearsed source exactly.

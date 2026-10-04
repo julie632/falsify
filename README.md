@@ -4,7 +4,11 @@ A small scientific verification lab that asks whether an impressive machine-lear
 
 The six-hour scope is deliberately narrow: one dataset, a participant-overlap defect, a valid control, and an evidence-driven follow-up. This is a working feasibility demonstration, not a benchmark of general agent reliability.
 
-The password-protected [hosted demo](https://falsify.134-122-55-169.sslip.io/?run=df7fdb571ed140e7851c17517e13422e#results-heading) runs on the team's existing DigitalOcean droplet. Both fresh hosted AI cases completed on October 4, 2026, after the account owner completed the official device sign-in separately on the server. Hosted scientific computation and recorded replays are also verified. See [deployment status and operations](docs/deployment.md). Website login details are kept outside Git in `output/deployment/access.txt` on the development computer.
+[Open the judge demo](https://falsify.134-122-55-169.sslip.io) · [Source repository](https://github.com/julie632/falsify) · [Submission evidence and requirements](docs/submission.md) · [Agent specifications](agents/falsify.yaml) · [Agent policies](docs/agent-policies.md)
+
+The two-minute [video](https://falsify.134-122-55-169.sslip.io/demo.mp4) and [captions](https://falsify.134-122-55-169.sslip.io/demo.srt) are planned release destinations; upload and public access verification are pending. The hosted demo runs on DigitalOcean. Both fresh hosted AI cases completed on October 4, 2026. Scientific computation and recorded replays are also verified. Final anonymous website and repository access checks are pending release verification.
+
+We use **open-source Omnigent**, not managed Databricks. Page 2 of the supplied official challenge brief explicitly permits either route and requires a Databricks account only for the managed route. Our actual Omnigent specialist sessions and computations are documented below.
 
 ## Run the demo
 
@@ -75,13 +79,19 @@ Initial measured reference results on this computer:
 
 The promising predictive result survives the better test. The original evaluation nevertheless cannot establish generalization to unseen people. The score difference is descriptive, not an isolated causal estimate of leakage, because training sizes and test populations differ. The corrected result and the clean control use the same official split, so they are not independent replications.
 
+## Measured improvement
+
+A separate, preregistered deterministic comparison measured computation after the original valid-control evaluation already exists. In three paired repeats, auditing and retaining that result avoided one redundant classifier fit and one scientific call relative to an explicit audit-and-always-rerun comparator. The median paired difference was **13.9 seconds of local wall time**. Both paths retained the same narrow conclusion, and every rerun exactly matched the recorded control's metrics and predictions. See the [frozen protocol](demo/validation/compute-savings-protocol.json), [complete measurements](demo/validation/compute-savings.json), and [comparison code](scripts/measure_compute_savings.py).
+
+This intentionally redundant comparator demonstrates a small compute saving. A fixed conditional rule can make the same saving. The measurement excludes original evaluation cost, inference, orchestration, startup and human effort; it establishes no end-to-end agent speedup, unique agent benefit or 10x claim. Repeated executions of the same case are not independent scientific replications.
+
 ## Evidence and boundaries
 
 Run records live in `artifacts/runs/`. They preserve actual tool results, dataset hashes, split provenance, evidence IDs, agent events, final decisions, failures, and usage when reported. Live decisions must cite recorded evidence. A wrong AI judgment is retained and flagged when it disagrees with the fixed participant-separation rule.
 
-The application limits the tools to the fixed dataset and three named computations. Native shell, browsing, and skills are disabled in the research agents. Tool executions, specialist dispatches, and wall time are bounded. The browser UI is intended for local use and is not a production multi-user service.
+The application limits the tools to the fixed dataset and three named computations. Native shell, browsing, and skills are disabled in the research agents. Tool executions, specialist dispatches, and wall time are bounded. The hosted interface is a bounded hackathon demonstration; see the [agent policies and human review gates](docs/agent-policies.md).
 
-Dataset files, runtime caches, credentials, original PDFs, and the private resume are excluded from Git. Do not publish the entire workspace folder. Only reviewed source and the explicitly curated historical replay package belong in a submission repository.
+Dataset files, runtime caches, credentials, original PDFs, and the private resume are excluded from Git. Do not publish the entire workspace folder. The submission includes reviewed source, documentation, curated replay and hosted validation records, and the declared compute comparison.
 
 ## Development and handover
 

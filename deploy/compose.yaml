@@ -18,6 +18,8 @@ services:
       - ALL
     environment:
       FALSIFY_DEDICATED_SERVER: "1"
+      FALSIFY_PUBLIC_DEMO: ${FALSIFY_PUBLIC_DEMO:-0}
+      FALSIFY_PUBLIC_RUN_IDS: ${FALSIFY_PUBLIC_RUN_IDS:-}
     ports:
       # Only the existing host reverse proxy may expose this service.
       - "127.0.0.1:${FALSIFY_HOST_PORT:-18765}:8765"

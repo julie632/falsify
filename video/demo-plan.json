@@ -1,0 +1,431 @@
+{
+  "title": "Falsify: test the evidence behind the claim",
+  "duration_seconds": 120,
+  "language": "en",
+  "format": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "container": "mp4",
+    "video_codec": "h264",
+    "audio_codec": "aac"
+  },
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "hpp4J3VqNfWAUOO0d1Us",
+    "model_id": "eleven_multilingual_v2",
+    "direction": "Clear, warm, confident English narration with calm scientific precision. Allow brief pauses at evidence changes. Use a stock or otherwise authorized voice.",
+    "music": "none",
+    "provenance_file": "../output/demo-video/audio/provenance.json",
+    "voice_name": "Bella - Professional, Bright, Warm",
+    "flow_id": "P2EPnGYnCRdP52hDhWWy"
+  },
+  "readiness": {
+    "status": "ready",
+    "is_final": false,
+    "reason": "Actual ElevenLabs narration, exact source transcriptions, immutable evidence, local comparison and inspected recorded captures verified. Final render in progress.",
+    "finalization_checklist": [
+      {
+        "id": "system_ready",
+        "status": "verified",
+        "requirement": "Confirm the intended system changes are complete and the final interface is stable. Do not finalize while the system is actively changing.",
+        "evidence": "docs/morning-handover.md; demo/validation/hosted-live-row_split.json; demo/validation/hosted-live-participant_holdout.json; verification completed 2026-10-04 11:35 UTC"
+      },
+      {
+        "id": "evidence_locked",
+        "status": "verified",
+        "requirement": "Verify both selected immutable run files, checksums, completed Omnigent status, protocol verification, record-specific event IDs, metrics, verdicts, and elapsed time immediately before rendering. Recheck all narration if selected records change."
+      },
+      {
+        "id": "rules_fixed",
+        "status": "verified",
+        "requirement": "Keep scientific evaluation rules fixed before any final runs. Preserve failed or disagreeing results under their true mode."
+      },
+      {
+        "id": "screen_capture",
+        "status": "verified",
+        "requirement": "Capture the final real application at readable resolution with replay labels and exact selected records. Add exactly one image or video path to each scene. Inspect for credentials, private paths, original PDFs, resume content, or unrelated personal data.",
+        "evidence": "output/demo-video/captures/capture-report.json; actual local UI captures match the immutable selected Omnigent records."
+      },
+      {
+        "id": "elevenlabs_voice",
+        "status": "verified",
+        "requirement": "Select an available ElevenLabs stock or otherwise authorized voice, set voice_id and model_id, and generate one narration file per scene after the wording is final. Add each audio path and measured duration."
+      },
+      {
+        "id": "timing",
+        "status": "verified",
+        "requirement": "Verify each original narration recording fits its allocated scene without clipping. Rewrite or regenerate if needed. Render exactly 120 seconds with readable captions and short intentional pauses."
+      },
+      {
+        "id": "final_render_gate",
+        "status": "verified",
+        "requirement": "Once the system, evidence, chosen ElevenLabs voice, input audio durations and final captures are verified, set readiness.status to ready so the final renderer can run. Keep is_final false until the resulting full video passes audiovisual review."
+      },
+      {
+        "id": "visual_audio_review",
+        "status": "pending",
+        "requirement": "Watch and listen to the complete rendered video. Check pronunciation, pacing, captions, numbers, replay labels, attribution, limitations, and the final frame. Set is_final to true only after this output review passes. Publishing or event submission still requires user authorization."
+      }
+    ]
+  },
+  "evidence_policy": {
+    "presentation": "Recorded replay of actual Omnigent investigations. Watching the replay performs no fresh inference or experiment.",
+    "recording_origin": "Development computer, 3 October 2026",
+    "hypotheses": "AI-generated hypotheses must be labeled as such when displayed.",
+    "unsupported_claims": [
+      "No speed multiplier without a measured baseline",
+      "No general agent reliability claim from these two cases",
+      "No causal leakage-effect estimate from the score difference",
+      "No claim that the corrected case and clean control are independent replications",
+      "No claim that hosted fresh AI inference works merely because a replay works"
+    ],
+    "human_gate": "Human evidence review is required before making broader scientific or deployment claims.",
+    "dataset_attribution": "Reyes-Ortiz, Anguita, Ghio, Oneto, and Parra (2013). UCI Human Activity Recognition Using Smartphones. DOI 10.24432/C54S4K. CC BY 4.0.",
+    "dataset_source_url": "https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones"
+  },
+  "selected_runs": [
+    {
+      "role": "flawed_evaluation",
+      "run_id": "06f519544cd443a194a44965a1246164",
+      "path": "../demo/runs/06f519544cd443a194a44965a1246164/run.json",
+      "sha256": "670b487993ec73aa82bef2e9c7bd720948dd659b888001efa998559dc63d63cf",
+      "original_mode": "omnigent",
+      "presentation_mode": "recorded_replay"
+    },
+    {
+      "role": "valid_control",
+      "run_id": "83faf266dc944354b43b5b8ffc22bbd6",
+      "path": "../demo/runs/83faf266dc944354b43b5b8ffc22bbd6/run.json",
+      "sha256": "b94648d9674fd972d64bec6857ce4825f60ce484a265eab95f62d8fb9d80a520",
+      "original_mode": "omnigent",
+      "presentation_mode": "recorded_replay"
+    }
+  ],
+  "verified_observations": {
+    "flawed_original_accuracy": 0.9800543970988214,
+    "flawed_shared_participants": 21,
+    "corrected_accuracy": 0.9616559212758737,
+    "corrected_shared_participants": 0,
+    "control_shared_participants": 0,
+    "flawed_scientific_calls": 3,
+    "flawed_specialist_dispatches": 3,
+    "control_scientific_calls": 2,
+    "flawed_elapsed_seconds": 163.939292,
+    "speedup_measured": false,
+    "local_compute_comparison": {
+      "paired_repeats": 3,
+      "classifier_fits_avoided_per_repeat": 1,
+      "median_paired_local_wall_seconds_avoided": 13.906177124939859,
+      "overall_discovery_speedup_measured": false
+    }
+  },
+  "scenes": [
+    {
+      "id": "claim",
+      "duration_seconds": 14,
+      "title": "Does the score support the claim?",
+      "narration": "A model can score well on the wrong test. Falsify asks: does this activity classifier generalize to people it has never seen? The bottleneck is choosing evidence that actually tests the claim.",
+      "evidence_label": "Context",
+      "visual_direction": "Open on the actual final Falsify interface, with the scientific question and protocol visible. Add the title Falsify | Test the evidence behind the claim. Keep the selected record identified as a recorded replay if results are visible. Do not animate an unexecuted run.",
+      "on_screen_points": [
+        "Question: Does the classifier generalize to unseen people?",
+        "Bottleneck: choosing evidence that tests the claim"
+      ],
+      "capture_plan": {
+        "path": "../output/demo-video/captures/claim.png",
+        "run_id": "06f519544cd443a194a44965a1246164",
+        "selector": "#claim-heading",
+        "focus": "Scientific question and protocol"
+      },
+      "evidence_refs": [
+        {
+          "path": "../demo/runs/06f519544cd443a194a44965a1246164/run.json",
+          "event_ids": [
+            "E019"
+          ],
+          "fields": [
+            "results.original.claim"
+          ]
+        }
+      ],
+      "caption": "Does a high score support performance on unseen people?\nFalsify chooses and executes evidence checks.",
+      "image": "../output/demo-video/captures/claim.png",
+      "audio": "../output/demo-video/audio/claim-take-1.mp3"
+    },
+    {
+      "id": "orchestration",
+      "duration_seconds": 15,
+      "title": "A real Omnigent investigation",
+      "narration": "This is a recorded replay of an actual Omnigent investigation. A planner, operator, and separate reviewer exchange evidence. Tools execute real computations on the public UCI Human Activity Recognition dataset.",
+      "evidence_label": "Recorded replay",
+      "visual_direction": "Keep a persistent Recorded replay | Original mode: Live Omnigent label. Show actual planner completion, tool execution, and reviewer completion from the ledger. Connect the roles with arrows only as explanatory overlays. Label any hypothesis text AI-generated hypothesis. Include UCI data attribution on screen.",
+      "on_screen_points": [
+        "Planner \u2192 Operator \u2192 Reviewer",
+        "Recorded 3 October 2026 on the development computer",
+        "UCI HAR, DOI 10.24432/C54S4K, CC BY 4.0"
+      ],
+      "capture_plan": {
+        "path": "../output/demo-video/captures/orchestration.png",
+        "run_id": "06f519544cd443a194a44965a1246164",
+        "selector": "#evidence",
+        "focus": "Actual planner and reviewer events"
+      },
+      "evidence_refs": [
+        {
+          "path": "../demo/runs/06f519544cd443a194a44965a1246164/run.json",
+          "event_ids": [
+            "E011",
+            "E019",
+            "E033",
+            "E041",
+            "E048"
+          ],
+          "fields": [
+            "mode",
+            "results.original.dataset"
+          ]
+        },
+        {
+          "path": "../agents/falsify.yaml",
+          "description": "Declared specialist roles and bounded scientific tools"
+        }
+      ],
+      "caption": "Recorded Omnigent investigation: planner, operator, separate reviewer.\nUCI HAR \u00b7 Reyes-Ortiz et al. (2013) \u00b7 DOI 10.24432/C54S4K \u00b7 CC BY 4.0.",
+      "image": "../output/demo-video/evidence-cards/orchestration.png",
+      "audio": "../output/demo-video/audio/orchestration-take-3.mp3"
+    },
+    {
+      "id": "choices",
+      "duration_seconds": 16,
+      "title": "Choose the most useful verification",
+      "narration": "The planner compares two tests: a cheap participant overlap audit and a costlier held out evaluation. After the baseline, it chooses the audit because participant separation is necessary to test generalization to new people.",
+      "evidence_label": "Recorded replay",
+      "visual_direction": "Open the recorded planner decision, not the original-score event. Show two option overlays: Audit participant IDs, very low CPU cost; Held-out evaluation, retrain the fixed classifier. Highlight the selected audit. Label the hypotheses AI-generated: transferable activity signal versus participant overlap. These are candidate explanations, not findings.",
+      "on_screen_points": [
+        "AI-generated hypotheses: transferable signal or participant overlap",
+        "Candidate 1: audit participant IDs",
+        "Candidate 2: evaluate held-out participants",
+        "First verification step: participant overlap audit"
+      ],
+      "capture_plan": {
+        "path": "../output/demo-video/captures/choices.png",
+        "run_id": "06f519544cd443a194a44965a1246164",
+        "selector": "#evidence-E012",
+        "focus": "Planner decision E011/E012; full returned plan is E015"
+      },
+      "evidence_refs": [
+        {
+          "path": "../demo/runs/06f519544cd443a194a44965a1246164/run.json",
+          "event_ids": [
+            "E011",
+            "E015",
+            "E054"
+          ]
+        }
+      ],
+      "caption": "AI-generated hypotheses: transferable signal or participant overlap.\nAfter the baseline, audit overlap before the costlier held-out evaluation.",
+      "image": "../output/demo-video/evidence-cards/choices.png",
+      "audio": "../output/demo-video/audio/choices-take-1.mp3"
+    },
+    {
+      "id": "audit",
+      "duration_seconds": 14,
+      "title": "A high score, an invalid evaluation",
+      "narration": "The original accuracy is about ninety eight percent. But the audit finds twenty one participants in both training and testing. The reviewer requests a new experiment with participants completely separated.",
+      "evidence_label": "Recorded replay",
+      "visual_direction": "Show the original 98.01% accuracy, then open evidence E026 with 21 shared participants highlighted. Move focus to the actual reviewer request for participant_holdout. Keep the run identity fixed and the replay label visible.",
+      "on_screen_points": [
+        "Original accuracy: 98.01%",
+        "Participants shared between training and test: 21",
+        "Reviewer requests participant-held-out evaluation"
+      ],
+      "capture_plan": {
+        "path": "../output/demo-video/captures/audit.png",
+        "run_id": "06f519544cd443a194a44965a1246164",
+        "selector": "#evidence-E026",
+        "focus": "Audit summary with measured participant overlap. Raw data can be opened in the final screen recording."
+      },
+      "evidence_refs": [
+        {
+          "path": "../demo/runs/06f519544cd443a194a44965a1246164/run.json",
+          "event_ids": [
+            "E019",
+            "E026",
+            "E037"
+          ]
+        }
+      ],
+      "caption": "Original accuracy: 98.01%. Shared participants: 21.\nThe reviewer requests a participant-held-out evaluation.",
+      "image": "../output/demo-video/captures/audit.png",
+      "audio": "../output/demo-video/audio/audit-take-1.mp3"
+    },
+    {
+      "id": "corrected",
+      "duration_seconds": 18,
+      "title": "The prediction survives a better test",
+      "narration": "With classifier settings fixed, the operator runs that stronger test. Accuracy remains about ninety six percent. The reviewer rejects the original evaluation while recognizing the repaired evidence. Invalid evaluation does not disprove the predictive claim.",
+      "evidence_label": "Recorded replay",
+      "visual_direction": "Show the corrected result and recorded final verdict together. Display 96.17% accuracy, nine held-out study participants, and zero overlap. Include a readable limitation: different populations and sample counts mean the score change does not isolate a causal effect of overlap. Do not label the original predictive claim false.",
+      "on_screen_points": [
+        "Corrected accuracy: 96.17%",
+        "9 held-out participants, zero overlap",
+        "Original evaluation unsupported; repaired evidence supports the narrow claim",
+        "Score difference is not a causal estimate of overlap"
+      ],
+      "capture_plan": {
+        "path": "../output/demo-video/captures/corrected.png",
+        "run_id": "06f519544cd443a194a44965a1246164",
+        "selector": ".results-section",
+        "focus": "Corrected result and verdict"
+      },
+      "evidence_refs": [
+        {
+          "path": "../demo/runs/06f519544cd443a194a44965a1246164/run.json",
+          "event_ids": [
+            "E041",
+            "E048",
+            "E054"
+          ],
+          "fields": [
+            "results.corrected.model",
+            "results.corrected.limitations",
+            "verdict"
+          ]
+        }
+      ],
+      "caption": "96.17% on 9 unseen participants within this study\u2019s recording conditions.\nThe score difference does not isolate the causal effect of overlap.",
+      "image": "../output/demo-video/captures/corrected.png",
+      "audio": "../output/demo-video/audio/corrected-take-1.mp3"
+    },
+    {
+      "id": "control",
+      "duration_seconds": 14,
+      "title": "A valid control should stay valid",
+      "narration": "Now the clean control: zero participant overlap. The reviewer retains its result without a redundant classifier run. Both decisions link to the scores, split records, and evidence identifiers.",
+      "evidence_label": "Recorded replay",
+      "visual_direction": "Switch visibly to the valid-control record. Show the retained original result and audit evidence, then the evidence export link. Caption: same official split as the repaired case, not an independent replication. Do not portray the retained result as an additional classifier run.",
+      "on_screen_points": [
+        "Clean control: zero shared participants",
+        "Retain the original evaluation",
+        "2 scientific calls; no redundant correction",
+        "Same official split, not independent replication"
+      ],
+      "capture_plan": {
+        "path": "../output/demo-video/captures/control.png",
+        "run_id": "83faf266dc944354b43b5b8ffc22bbd6",
+        "selector": ".results-section",
+        "focus": "Clean-control retained result"
+      },
+      "evidence_refs": [
+        {
+          "path": "../demo/runs/83faf266dc944354b43b5b8ffc22bbd6/run.json",
+          "event_ids": [
+            "E020",
+            "E027",
+            "E040"
+          ],
+          "fields": [
+            "usage.tool_calls",
+            "verdict.repair_status"
+          ]
+        },
+        {
+          "path": "../demo/runs/06f519544cd443a194a44965a1246164/run.json",
+          "event_ids": [
+            "E041"
+          ],
+          "fields": [
+            "results.corrected.split"
+          ]
+        }
+      ],
+      "caption": "Zero overlap. Original result retained without a redundant rerun.\nSame official split as the repaired case, not independent replication.",
+      "image": "../output/demo-video/captures/control.png",
+      "audio": "../output/demo-video/audio/control-take-1.mp3"
+    },
+    {
+      "id": "measured",
+      "duration_seconds": 14,
+      "title": "Measured computation, clear limits",
+      "narration": "In a separate deterministic comparison, retaining the valid control avoided one redundant classifier fit. This measures local computation after the original result, not end-to-end agent speedup.",
+      "evidence_label": "Deterministic local run",
+      "visual_direction": "Show the measured deterministic post-original valid-control comparison, clearly distinct from the recorded Omnigent investigation. Disclose the artificial always-rerun baseline and that a fixed rule can avoid the same fit.",
+      "on_screen_points": [
+        "3 scientific calls; 3 specialist dispatches",
+        "164 seconds elapsed in this recorded run",
+        "No measured speed multiplier",
+        "One dataset, one defect, one valid control"
+      ],
+      "capture_plan": {
+        "path": "../output/demo-video/captures/measured.png",
+        "run_id": "06f519544cd443a194a44965a1246164",
+        "selector": "#evidence",
+        "focus": "Recorded run usage and inspectable evidence"
+      },
+      "evidence_refs": [
+        {
+          "path": "../demo/validation/compute-savings.json",
+          "sha256": "722ba2d2e7b00b9d251e7aa4b5b05ef4b70aea22a9c91f669a7ce0ccb37cc979",
+          "fields": [
+            "protocol",
+            "summary",
+            "limitations"
+          ]
+        },
+        {
+          "path": "../demo/validation/compute-savings-protocol.json",
+          "sha256": "97a299c542d070d2cc30fad5a6019482c26e6b0a1e72bad62c3f5dab0f269fdf"
+        }
+      ],
+      "caption": "Separate local comparison: median 13.9 s avoided over 3 paired repeats.\nArtificial always-rerun baseline. No end-to-end agent speedup measured.",
+      "image": "../output/demo-video/evidence-cards/measured-compute.png",
+      "audio": "../output/demo-video/audio/measured-v2-take-4.mp3"
+    },
+    {
+      "id": "closing",
+      "duration_seconds": 15,
+      "title": "The next experiment",
+      "narration": "Next, test an independent participant cohort, then assess reviewers against hidden defects and valid controls. Human review remains essential. Falsify makes a claim testable, and its justification inspectable.",
+      "evidence_label": "Context",
+      "visual_direction": "Close on the method and limitations section of the actual interface. Overlay the proposed next studies and identify them as future work, not completed experiments. Show UCI attribution and a concise human review gate before broader claims or deployment. Do not imply the hosted environment has fresh AI inference unless final evidence verifies it.",
+      "on_screen_points": [
+        "Next scientific test: independently recruited participants",
+        "Next reviewer test: hidden defects and valid controls",
+        "Human review before broader claims or deployment",
+        "Future work, not executed results"
+      ],
+      "capture_plan": {
+        "path": "../output/demo-video/captures/closing.png",
+        "run_id": "06f519544cd443a194a44965a1246164",
+        "selector": "#method",
+        "focus": "Method, limitations, and proposed next experiments"
+      },
+      "evidence_refs": [
+        {
+          "path": "../demo/runs/06f519544cd443a194a44965a1246164/run.json",
+          "event_ids": [
+            "E054"
+          ],
+          "fields": [
+            "verdict.next_experiment"
+          ]
+        },
+        {
+          "path": "../docs/pitch.md",
+          "description": "Proposed reviewer evaluation against fixed rules and ordinary review; remaining validation needs"
+        }
+      ],
+      "caption": "Next: independent participant cohort and hidden-defect reviewer tests.\nFuture work. Human review required before broader claims or deployment.",
+      "image": "../output/demo-video/captures/closing.png",
+      "audio": "../output/demo-video/audio/closing-take-2.mp3"
+    }
+  ],
+  "version": 1,
+  "audio_review": {
+    "method": "ElevenLabs Scribe transcription comparison plus source duration and signal checks",
+    "all_scene_transcripts_exact_match": true,
+    "auditory_listening_performed": false,
+    "note": "No auditory input tool is available. Do not describe transcript-based checks as listening."
+  }
+}

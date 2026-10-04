@@ -1,0 +1,28 @@
+# Use only after FALSIFY_PUBLIC_DEMO=1 has been verified on the upstream.
+# Public visitors can read reviewed evidence. New experiments are blocked by
+# both this proxy and the application's read-only mode.
+{$FALSIFY_DOMAIN} {
+    @mutating not method GET HEAD
+    respond @mutating "This public demo provides recorded evidence only." 405
+
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy same-origin
+        X-Frame-Options DENY
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    }
+    request_body {
+        max_size 64KB
+    }
+    @media path /demo.mp4 /demo.srt /product-demo.mp4 /technical-walkthrough.mp4
+    handle @media {
+        root * /srv/falsify-media
+        file_server
+    }
+    handle {
+        reverse_proxy 127.0.0.1:18765 {
+            header_up -Authorization
+        }
+    }
+}

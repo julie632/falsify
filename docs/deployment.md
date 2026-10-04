@@ -2,13 +2,40 @@
 
 These files package the current single-team prototype. The Linux/amd64 container passed a local build and both deterministic scientific cases under Docker's architecture emulation.
 
-## Current deployment
+## Public judge access
+
+The judge-facing configuration is a no-login, read-only view of reviewed recorded evidence. It uses open-source Omnigent recordings, not a fresh agent run on each page visit. Deployment of this access change must pass the public checks below before it is described as live.
+
+Set these values in the deployment environment:
+
+```sh
+FALSIFY_PUBLIC_DEMO=1
+FALSIFY_PUBLIC_RUN_IDS=df7fdb571ed140e7851c17517e13422e,ba03b3d5ebc646e79ae9c166025b9237,06f519544cd443a194a44965a1246164,83faf266dc944354b43b5b8ffc22bbd6
+```
+
+Only the explicit allowlist is exposed. Every exposed record must also be a completed actual Omnigent run with verified protocol and reviewer/reference agreement. A missing or malformed allowlist exposes no records. Unknown IDs, private development history, incomplete runs, and deterministic reference records return `404` in this public mode. History therefore means reviewed public recordings, not all investigations stored on the server. The full private history remains preserved.
+
+Public visitors can switch between flawed evaluation and valid control, inspect the full recorded ledger, and export the reviewed evidence JSON. The interface labels every opened investigation as recorded replay and hides new-run controls. Server enforcement rejects creation and cancellation with `403`; the public Caddy configuration also rejects mutating methods with `405`. This mode does not probe model-account readiness or expose operational account details in `/api/status`.
+
+Recreate the app with public mode enabled and verify its loopback API before replacing the authenticated proxy configuration with [Caddyfile.public.example](../deploy/Caddyfile.public.example). Validate the proxy configuration before reloading it. Preserve the old protected configuration for operator access or rollback. Never remove website authentication while the upstream still permits new runs.
+
+Verify the public endpoint without credentials:
+
+```sh
+uv run python -m scripts.check_demo --public --url https://falsify.134-122-55-169.sslip.io
+```
+
+The check requires no-login HTTPS, `public_demo: true`, `read_only: true`, all four reviewed records and unchanged exports, blocked unknown IDs, and rejected start/cancel requests. The default local app and an authenticated operator deployment with `FALSIFY_PUBLIC_DEMO=0` retain the full workflow. To restore operator mode, restore full-site authentication before enabling mutations.
+
+Local verification for this change: 99 automated tests passed, including the public allowlist, fail-closed configuration, unchanged reviewed exports, rejected mutations, private-run preservation, and the default local workflow. A hosted rollout result must be recorded separately from these local checks.
+
+## Earlier restricted deployment and live verification
 
 The app was updated on October 4, 2026, with cancellation cleanup, stricter audit validation, the rehearsed evidence interface, and a verified fix for slow agent-runtime startup on the one-core droplet. The previous image is retained as `falsify-lab:pre-hosted-live`; the earlier `falsify-lab:pre-overnight` image also remains available.
 
-The app is hosted on the existing `claude` droplet at [falsify.134-122-55-169.sslip.io](https://falsify.134-122-55-169.sslip.io), behind authenticated HTTPS. The target is Ubuntu 24.04, amd64, with one CPU and 2 GiB RAM. Docker and Compose were installed from Ubuntu's package repositories. The existing Claude Remote Control service remains active. No droplet resize was performed.
+Before the public judging change, the app was hosted on the existing `claude` droplet at [falsify.134-122-55-169.sslip.io](https://falsify.134-122-55-169.sslip.io), behind authenticated HTTPS. The target is Ubuntu 24.04, amd64, with one CPU and 2 GiB RAM. Docker and Compose were installed from Ubuntu's package repositories. The existing Claude Remote Control service remains active. No droplet resize was performed.
 
-The deployed image is `sha256:3901dadacfbaf9f37df1a8ca1c9dd418af8435dd91a6e4285b42d0abf6937d2e`. It runs in `/opt/falsify` using the app Compose file and optional proxy overlay. The application port is limited to host loopback; the firewall permits SSH and web ports 80/443.
+The verified pre-public image was `sha256:3901dadacfbaf9f37df1a8ca1c9dd418af8435dd91a6e4285b42d0abf6937d2e`. It runs in `/opt/falsify` using the app Compose file and optional proxy overlay. The application port is limited to host loopback; the firewall permits SSH and web ports 80/443.
 
 Verified on the actual droplet:
 
@@ -27,7 +54,7 @@ The first hosted live attempt, `151b7c86147f4cf99bb6cf8e7dd189a2`, failed before
 
 Private website login details remain in local `output/deployment/access.txt`, excluded from Git. They are separate from the Codex account login. No laptop authentication files were transferred.
 
-The app runs as UID 10001, with one Uvicorn worker. It listens on port 8765 inside its container and is published only to `127.0.0.1:18765` on the host. An HTTPS reverse proxy with authentication for the entire site is required before giving anyone a public link.
+The app runs as UID 10001, with one Uvicorn worker. It listens on port 8765 inside its container and is published only to `127.0.0.1:18765` on the host. A full-workflow operator deployment requires full-site HTTPS authentication. The separate public judge mode above permits no-login access only after server-side read-only checks pass.
 
 ## Inspect the existing droplet first
 
@@ -69,7 +96,7 @@ curl --fail http://127.0.0.1:18765/api/status
 
 The image uses Python 3.12 and `uv sync --locked --no-dev`. It pins uv 0.12.2 and official `@openai/codex` 0.158.0-alpha.2.1, matching the CLI protocol version used by the local integration. This CLI version is published for Linux. It is a deliberate prerelease pin, not a claim that it is the latest stable release. Changing it requires repeating the Omnigent integration checks. Python and Node base-image tags receive upstream rebuilds; record image digests after the first successful target build if exact rollback is needed. The uv container workflow follows [Astral's documentation](https://docs.astral.sh/uv/guides/integration/docker/).
 
-The application starts without a Codex login. Deterministic computations are available, while live mode should remain disabled until authentication is established and the service restarts.
+In private operator mode, the application starts without a Codex login. Deterministic computations are available, while live mode remains disabled until authentication is established and the service restarts. Public judge mode offers recorded evidence only and does not require model authentication.
 
 To avoid build-time memory pressure on the shared droplet, build the `linux/amd64` image on the development machine and transfer the image archive through the authorized SSH connection. Load it on the server, then use `up -d --no-build app`. The tested image tag is `falsify-lab:0.1.0`; always identify the final image ID after the latest source build. A native arm64-only image will not match this droplet.
 
@@ -85,7 +112,7 @@ To avoid build-time memory pressure on the shared droplet, build the `linux/amd6
 
 Docker initializes new volumes from directories owned by UID 10001 in the image. The root filesystem is read-only; `/tmp` is a bounded temporary filesystem. Temporary Omnigent sessions are ephemeral, while final evidence records and configured runtime logs persist. Verify the actual log and storage paths during the target smoke test.
 
-Compose sets `FALSIFY_DEDICATED_SERVER=1`. At startup, the dedicated container treats previously unfinished run records as interrupted, avoiding confusion if a recycled process ID happens to match a stale record. This mode assumes the single app worker exclusively owns the evidence volume.
+Compose sets `FALSIFY_DEDICATED_SERVER=1`. In private operator mode at startup, the dedicated container treats previously unfinished run records as interrupted, avoiding confusion if a recycled process ID happens to match a stale record. This mode assumes the single app worker exclusively owns the evidence volume. Public judge startup leaves private experiment records unchanged and does not inspect the account.
 
 Treat `auth_home` and `runtime` as private server storage. Do not publish them or include them in a source archive. Normal application restarts retain volumes. Do not use `docker compose down -v` when evidence or authentication needs to survive.
 
@@ -111,7 +138,7 @@ curl --fail http://127.0.0.1:18765/api/status
 
 Successful login is not proof that the account can use the agent's configured model or that Linux orchestration works. Verify those with an actual bounded live investigation after the basic application test. Subscription allowance is consumed; a per-run dollar cost is not reported.
 
-## Add the authenticated HTTPS site
+## Add the authenticated operator HTTPS site
 
 Use a domain already intended for this app and point its DNS at the inspected droplet. The proxy must be able to obtain and renew its HTTPS certificate. Keep the application on loopback.
 
@@ -149,7 +176,7 @@ The `linux/amd64` image was built with locked Python dependencies and the exact 
 
 Both deterministic cases completed inside the container with real computations. The flawed run had 21 shared participants and 98.0508% accuracy; its correction and the clean control had no participant overlap and 96.1656% accuracy. The Linux original result differs by one prediction from the earlier macOS result. Use each run's recorded metrics rather than presenting one machine's number as a universal constant. The subsequent actual hosted live sessions are recorded separately in the current deployment section above.
 
-## Target-host acceptance checks
+## Private operator target-host acceptance checks
 
 1. The container is healthy and runs as UID 10001. It exposes only the intended host loopback port, with one app worker.
 2. No laptop credentials, resume, PDF, or private run files are present in the image. Any imported replay must be a deliberately selected, reviewed record, labeled as replay.
@@ -158,7 +185,7 @@ Both deterministic cases completed inside the container with real computations. 
 5. Following the separate Codex sign-in, a live run produces real specialist delegations and scientific tool results. A failed live run remains failed. Check the final evidence and reviewer/reference agreement.
 6. Restart the app and confirm that the dataset cache, authentication, and completed evidence persist. The UI labels older runs as recorded replay.
 
-Full-site authentication makes this a restricted team demo. It does not add per-user identities, separate inference budgets, or production multi-tenant isolation. Share access only with people authorized to run experiments using the configured server account.
+These authenticated acceptance checks apply to operator mode, not the separate no-login public judge mode. Full-site authentication makes operator mode a restricted team demo. It does not add per-user identities, separate inference budgets, or production multi-tenant isolation. Share access only with people authorized to run experiments using the configured server account.
 
 ## Operate and roll back
 

@@ -25,16 +25,29 @@
   function splitName(value) { return ({ stratified_random_rows_from_official_training_pool: 'Shuffled recordings', official_participant_holdout: 'Participant holdout' })[value] || humanize(value); }
 
   function updateModeExplanation() {
+    if (state.status?.public_demo) return;
     const live = $('run-mode').value === 'omnigent';
     $('mode-explainer').textContent = live ? 'Omnigent coordinates AI agents and real scientific tools using the existing Codex sign-in. Per-run dollar cost is not reported.' : 'Deterministic local runs real scientific checks using a fixed decision policy. It does not use AI agents or paid inference.';
   }
 
   function renderStatus(status) {
     state.status = status;
-    state.activeRunId = status.active_run_id || (state.busy ? state.run?.id : null);
+    const publicDemo = status.public_demo === true;
+    state.activeRunId = publicDemo ? null : status.active_run_id || (state.busy ? state.run?.id : null);
     $('connection-status').className = 'connection connected';
-    $('connection-label').textContent = 'Lab connected';
+    $('connection-label').textContent = publicDemo ? 'Recorded evidence ready' : 'Lab connected';
     $('app-version').textContent = status.version ? `Falsify · ${status.version}` : 'Falsify POC';
+    $('public-demo-notice').hidden = !publicDemo;
+    $('case-fieldset').hidden = publicDemo;
+    $('run-controls').hidden = publicDemo;
+    $('mode-explainer').hidden = publicDemo;
+    $('history-label').textContent = publicDemo ? 'Reviewed recorded investigations' : 'All investigations, including failures';
+    if (publicDemo) {
+      $('dataset-status').textContent = 'Dataset provenance accompanies each recorded result.';
+      if (!status.recorded_evidence_available) $('connection-label').textContent = 'Recorded evidence unavailable';
+      updateControls();
+      return;
+    }
     $('dataset-status').textContent = status.dataset_ready ? 'Dataset available locally' : 'Dataset will be prepared for the first investigation.';
     const live = $('run-mode').querySelector('[value="omnigent"]');
     live.disabled = !(status.omnigent_available && status.auth_ready);
@@ -65,14 +78,15 @@
   }
 
   function updateControls() {
+    const readOnly = state.status?.public_demo === true || state.status?.read_only === true;
     const locked = !!state.activeRunId || state.busy || state.loadingRun;
-    $('run-button').disabled = locked || !state.selectedCase || !state.status;
+    $('run-button').disabled = readOnly || locked || !state.selectedCase || !state.status;
     $('run-button-text').textContent = state.busy || state.activeRunId ? 'Investigation running' : state.loadingRun ? 'Loading recorded evidence' : 'Run new investigation';
-    $('run-mode').disabled = locked;
-    document.querySelectorAll('input[name="case"]').forEach((input) => { input.disabled = locked; });
+    $('run-mode').disabled = readOnly || locked;
+    document.querySelectorAll('input[name="case"]').forEach((input) => { input.disabled = readOnly || locked; });
     $('run-history').disabled = state.loadingRun;
     ['flawed', 'control'].forEach((key) => { $('demo-' + key).disabled = state.loadingRun || !state.examples[key]; });
-    $('active-run-notice').hidden = !state.activeRunId;
+    $('active-run-notice').hidden = readOnly || !state.activeRunId;
     $('view-active-run').disabled = state.loadingRun || state.run?.id === state.activeRunId;
     document.body.classList.toggle('is-running', state.busy);
   }
@@ -136,7 +150,7 @@
       $('verdict-icon').textContent = '?'; $('verdict-label').textContent = 'Conclusion';
       const stopped = ['failed', 'cancelled'].includes(run?.status);
       $('verdict-title').textContent = stopped ? 'This investigation could not finish.' : state.busy ? 'The investigation is in progress.' : 'The evidence gets the final word.';
-      $('verdict-summary').textContent = stopped ? 'The ledger preserves the work completed before the investigation stopped. No final scientific conclusion is available.' : state.busy ? 'The lab is collecting evidence. A conclusion will appear after the review.' : 'Run an investigation to see whether the claim is supported, needs revision, or requires more evidence.';
+      $('verdict-summary').textContent = stopped ? 'The ledger preserves the work completed before the investigation stopped. No final scientific conclusion is available.' : state.busy ? 'The lab is collecting evidence. A conclusion will appear after the review.' : state.status?.public_demo ? 'Choose a reviewed recording to inspect the measured results and reviewer conclusion.' : 'Run an investigation to see whether the claim is supported, needs revision, or requires more evidence.';
       return;
     }
     const status = String(verdict.status || '').toLowerCase();
@@ -282,12 +296,13 @@
     $('usage-tools').textContent = usage.tool_calls !== undefined ? `${usage.tool_calls} scientific tool calls${run.budget?.max_tool_calls ? ` / ${run.budget.max_tool_calls} limit` : ''}` : 'Tool usage pending';
     const elapsed = run.started_at ? Math.max(0, Math.round(((run.completed_at ? new Date(run.completed_at) : new Date()) - new Date(run.started_at)) / 1000)) : null;
     $('usage-duration').textContent = elapsed !== null && Number.isFinite(elapsed) ? `${elapsed}s elapsed` : 'Timing pending';
-    $('usage-cost').textContent = usage.cost_usd != null && Number.isFinite(Number(usage.cost_usd)) ? `Reported cost: $${Number(usage.cost_usd).toFixed(4)}` : run.mode === 'local' ? 'No model inference used' : 'Cost: not reported / subscription';
+    $('usage-cost').textContent = usage.cost_usd != null && Number.isFinite(Number(usage.cost_usd)) ? `Reported cost: $${Number(usage.cost_usd).toFixed(4)}` : run.mode === 'local' ? 'No model inference used' : state.status?.public_demo ? 'Model cost: not reported' : 'Cost: not reported / subscription';
     if (run.error) setError(readable(run.error));
   }
 
   function refreshExamples() {
     const eligible = (run, caseId) => {
+      if (state.status?.public_demo && run.mode !== 'omnigent') return false;
       if (run.case_id !== caseId || run.status !== 'completed' || !run.results?.original?.metrics || !run.results?.audit || run.validation?.agrees_with_split_rule === false) return false;
       if (run.mode === 'omnigent' && run.validation?.protocol_verified !== true) return false;
       const overlap = run.results.audit.split?.overlap_count;
@@ -314,7 +329,7 @@
       const blank = element('option', '', runs.length ? 'Select a recorded investigation' : 'No recorded investigations yet'); blank.value = ''; select.append(blank);
       runs.forEach((run) => { const option = element('option', '', `${caseName(run.case_id)} · ${sourceMode(run.mode)} · ${humanize(run.status)}${run.started_at ? ` · ${dateAndTime(run.started_at)}` : ''} · ${run.id.slice(0, 8)}`); option.value = run.id; select.append(option); });
       if (runs.some((run) => run.id === selected)) select.value = selected;
-    } catch (_) { /* Historical records are optional while the current investigation remains usable. */ }
+    } catch (error) { if (state.status?.public_demo) setError(`Could not load the reviewed recordings. ${error.message}`); }
   }
 
   function stopPolling() { if (state.polling) clearTimeout(state.polling); state.polling = null; }
@@ -344,7 +359,7 @@
   }
 
   async function startRun() {
-    if (state.busy || state.activeRunId || state.loadingRun || !state.selectedCase) return;
+    if (state.status?.public_demo || state.status?.read_only || state.busy || state.activeRunId || state.loadingRun || !state.selectedCase) return;
     setError(); stopPolling(); state.busy = true; state.isReplay = false; updateControls();
     try {
       const data = await request('/api/runs', { method: 'POST', body: JSON.stringify({ case_id: state.selectedCase, mode: $('run-mode').value }) });
@@ -391,11 +406,20 @@
       const savedRun = new URLSearchParams(window.location.search).get('run');
       if (savedRun && /^[a-f0-9]{32}$/.test(savedRun)) await loadRun(savedRun, true);
       else if (status.active_run_id) await loadRun(status.active_run_id, false);
+      else if (status.public_demo) {
+        const example = state.examples.flawed || state.examples.control;
+        if (example) await loadRun(example.id, true);
+        else {
+          $('run-state').textContent = 'No reviewed recording available';
+          renderResults(null);
+          setError('No reviewed recording is available at the moment. Please return later.');
+        }
+      }
     } catch (error) {
       $('connection-status').className = 'connection disconnected'; $('connection-label').textContent = 'Lab unavailable';
       $('case-options').replaceChildren(element('p', 'loading-copy', 'The experiment service is unavailable.'));
       $('dataset-status').textContent = 'Dataset status unavailable';
-      setError(`Could not connect to the lab. ${error.message} Refresh after starting the server.`);
+      setError(state.status?.public_demo ? `Could not load the recorded evidence. ${error.message} Please refresh the page.` : `Could not connect to the lab. ${error.message} Refresh after starting the server.`);
     }
   }
   window.addEventListener('beforeunload', () => { stopPolling(); if (state.statusPolling) clearTimeout(state.statusPolling); });

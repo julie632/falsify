@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "title": "Frozen post-original clean-control compute comparison",
+  "created_at": "2026-10-04T12:42:20.717966+00:00",
+  "execution_mode": "deterministic_local_comparison",
+  "question": "How much local computation does retaining a verified clean control avoid relative to explicitly rerunning the same classifier after the same audit?",
+  "case_id": "participant_holdout",
+  "seed": 42,
+  "paired_repeats": 3,
+  "fixed_order": [
+    [
+      "audit_and_retain",
+      "audit_and_always_rerun"
+    ],
+    [
+      "audit_and_always_rerun",
+      "audit_and_retain"
+    ],
+    [
+      "audit_and_retain",
+      "audit_and_always_rerun"
+    ]
+  ],
+  "warmup": "Call prepare_data once before any timed path. Do not fit a classifier during warm-up.",
+  "policies": {
+    "audit_and_retain": [
+      "audit_split(participant_holdout, seed=42)",
+      "retain the supplied original metrics after checking zero overlap"
+    ],
+    "audit_and_always_rerun": [
+      "audit_split(participant_holdout, seed=42)",
+      "run_experiment(participant_holdout, participant_holdout, seed=42)"
+    ]
+  },
+  "timing_scope": "perf_counter wall time and process_time CPU around each complete policy function, including its audit, optional rerun, validation and conclusion. Excludes data warm-up, original computation, imports and report writing.",
+  "count_scope": "Scientific calls are actual audit_split and run_experiment invocations. Classifier fits count completed run_experiment invocations; the hashed science implementation fits exactly one pipeline per invocation.",
+  "reference": {
+    "path": "demo/runs/83faf266dc944354b43b5b8ffc22bbd6/run.json",
+    "sha256": "b94648d9674fd972d64bec6857ce4825f60ce484a265eab95f62d8fb9d80a520",
+    "run_id": "83faf266dc944354b43b5b8ffc22bbd6"
+  },
+  "source_sha256": {
+    "scripts/measure_compute_savings.py": "0c580be8b9d507dee8973f5079f2bfbd7d7d0820973cbf618dda9c25e0906118",
+    "falsify/science.py": "6bbddd2d0ead39b8f3b707815ca2347a2eef7080ebb149da124f829b4780445d",
+    "uv.lock": "9756bff600171823fe14e43a43fa732f8af7322056607caff97a6535cde87d54"
+  },
+  "frozen_model": {
+    "name": "StandardScaler + LinearSVC",
+    "parameters": {
+      "C": 1.0,
+      "dual": "auto",
+      "max_iter": 20000,
+      "random_state": 42
+    },
+    "preprocessing": "StandardScaler fitted only on the training partition; uses the dataset's supplied 561 features.",
+    "sklearn_version": "1.9.1",
+    "numpy_version": "2.5.3",
+    "hyperparameters_tuned_on_holdout": false
+  },
+  "dataset": {
+    "name": "UCI Human Activity Recognition Using Smartphones",
+    "source_url": "https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones",
+    "download_url": "https://archive.ics.uci.edu/static/public/240/human%2Bactivity%2Brecognition%2Busing%2Bsmartphones.zip",
+    "doi": "10.24432/C54S4K",
+    "license": "CC BY 4.0",
+    "citation": "Reyes-Ortiz, Anguita, Ghio, Oneto, and Parra (2013). Human Activity Recognition Using Smartphones. UCI Machine Learning Repository.",
+    "sha256": "c00b803081a5c797cd5e4b83700a9810b38d53d9d84e01917e090e1fdbc81031",
+    "arrays_sha256": "8d5679d29ff146ad5b3bba2c5d67f4bb21acbcf6bd94ed71ddf9117d89e11349",
+    "sha256_scope": "Downloaded archive, not independently publisher-signed",
+    "cache_version": 1,
+    "n_features": 561,
+    "n_rows": 10299,
+    "n_participants": 30
+  },
+  "expected_metrics": {
+    "accuracy": 0.9616559212758737,
+    "macro_f1": 0.9621313858428845,
+    "confusion_matrix": [
+      [
+        493,
+        2,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        8,
+        460,
+        0,
+        3,
+        0,
+        0
+      ],
+      [
+        3,
+        7,
+        406,
+        1,
+        3,
+        0
+      ],
+      [
+        0,
+        6,
+        0,
+        427,
+        55,
+        3
+      ],
+      [
+        0,
+        0,
+        0,
+        14,
+        518,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        7,
+        530
+      ]
+    ],
+    "labels": [
+      "WALKING",
+      "WALKING_UPSTAIRS",
+      "WALKING_DOWNSTAIRS",
+      "SITTING",
+      "STANDING",
+      "LAYING"
+    ],
+    "n_correct": 2834
+  },
+  "expected_predictions_sha256": "730f86dd2e19ecdb44d8554266d6dc5e94679280d6e708a26a413c20ccdbf5de",
+  "acceptance_rule": "Every audit has zero participant and row overlap and the same dataset hash and split as the recorded control. Every rerun must exactly match the recorded metrics, prediction hash, model and split. Both policies must retain the same narrow supported conclusion. Stop and mark failed on any mismatch; never tune, retry selectively or discard a failed measurement.",
+  "summary_rule": "Report all pairs, per-policy medians and paired absolute differences in wall and process CPU seconds; report actual calls and classifier-fit counts. Do not report a speed multiplier.",
+  "limitations": [
+    "This compares local deterministic scientific computation after the original clean-control evaluation already exists. Its cost is excluded from both paths.",
+    "No LLM inference, Omnigent orchestration, network transport, startup, human effort, or end-to-end elapsed-time savings are measured.",
+    "The explicit always-rerun comparator intentionally repeats an already valid evaluation. It is an artificial baseline, not the best available method.",
+    "A fixed conditional rule can avoid the same redundant fit. No unique agent benefit or superiority over a fixed rule is established.",
+    "Three repeated executions of the same fixed case characterize this local computation only. They are not independent scientific replications or a reviewer-reliability estimate.",
+    "No overall speed multiplier, 10x discovery claim, dollar-cost saving, or human-time saving is established.",
+    "Data loading and cache warm-up are excluded. No classifier fit is warmed before measurement; local scheduling and machine load can affect timings.",
+    "The audit alone does not establish predictive performance. Both decisions also use the same already measured original metrics and their narrow study scope."
+  ]
+}
